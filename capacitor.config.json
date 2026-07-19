@@ -1,0 +1,11 @@
+{
+  "appId": "com.dennismendez.app",
+  "appName": "Dennis Mendez",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#EFF6FF"
+  }
+}
