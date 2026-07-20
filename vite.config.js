@@ -17,6 +17,16 @@ export default defineConfig({
         target: 'https://salamexporters.com',
         changeOrigin: true,
         secure: true,
+        // Production nginx returns 403 when Origin is localhost.
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.removeHeader('origin');
+            proxyReq.removeHeader('referer');
+            if (!proxyReq.getHeader('x-tenant-id')) {
+              proxyReq.setHeader('X-Tenant-ID', '4');
+            }
+          });
+        },
       },
     },
   },

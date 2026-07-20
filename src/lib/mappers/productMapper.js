@@ -1,9 +1,13 @@
+import { resolveImageUrl, resolveImageUrls } from '../resolveImageUrl';
+
 export function mapProduct(p) {
   if (!p) return null;
   const price = p.sale_price > 0 ? p.sale_price : p.price;
   const oldPrice = p.sale_price > 0 ? p.price : null;
   const discountPercent =
     oldPrice && oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
+  const thumbnail = resolveImageUrl(p.image_url);
+  const images = resolveImageUrls(p.image_urls?.length ? p.image_urls : p.image_url ? [p.image_url] : []);
 
   return {
     id: p.id,
@@ -14,8 +18,8 @@ export function mapProduct(p) {
     old_price: oldPrice,
     discount_percent: discountPercent,
     currency: p.currency || 'KES',
-    thumbnail: p.image_url || '',
-    images: p.image_urls?.length ? p.image_urls : p.image_url ? [p.image_url] : [],
+    thumbnail,
+    images: images.length ? images : thumbnail ? [thumbnail] : [],
     store_name: p.vendor_name || '',
     vendor_slug: p.vendor_slug || '',
     store_id: p.vendor_slug,
@@ -41,7 +45,8 @@ export function mapStore(s) {
     id: s.id,
     slug: s.slug,
     name: s.business_name,
-    logo_url: s.logo_url || '',
+    logo_url: resolveImageUrl(s.logo_url),
+    banner_url: resolveImageUrl(s.banner_url),
     rating: 4.5,
     followers_count: 0,
     verified: true,
@@ -59,7 +64,7 @@ export function mapCategory(c) {
     name: c.name,
     slug: c.slug,
     description: c.description || '',
-    image_url: c.image_url || '',
+    image_url: resolveImageUrl(c.image_url),
     parent_id: c.parent_id,
     children: (c.children || []).map(mapCategory),
   };

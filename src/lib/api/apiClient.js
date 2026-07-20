@@ -1,8 +1,16 @@
-import { API_BASE_URL } from './config';
+import { API_BASE_URL, TENANT_ID } from './config';
 import { ApiError } from './errors';
 import { clearTokens, getAccessToken, getRefreshToken, setTokens } from './tokenStorage';
 
 let refreshPromise = null;
+
+function defaultHeaders(extra = {}) {
+  return {
+    Accept: 'application/json',
+    'X-Tenant-ID': String(TENANT_ID),
+    ...extra,
+  };
+}
 
 async function refreshAccessToken() {
   const refreshToken = getRefreshToken();
@@ -10,7 +18,7 @@ async function refreshAccessToken() {
 
   const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: defaultHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ refresh_token: refreshToken }),
   });
 
@@ -32,11 +40,11 @@ async function doFetch(path, options = {}, meta = {}) {
   const { skipAuth: _skip, ...fetchOptions } = options;
   const effectiveSkipAuth = skipAuth || _skip;
 
-  const headers = {
-    Accept: 'application/json',
+  const headers = defaultHeaders({
     ...(fetchOptions.body ? { 'Content-Type': 'application/json' } : {}),
     ...fetchOptions.headers,
-  };
+  });
+
 
   if (!effectiveSkipAuth) {
     const token = getAccessToken();
