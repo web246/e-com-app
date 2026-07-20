@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, MapPin, Truck, CreditCard, ClipboardCheck } from 'lucide-react';
@@ -8,7 +8,11 @@ import PageTransition from '@/components/ui/PageTransition';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCart } from '@/lib/useCart';
+import { useAuth } from '@/lib/AuthContext';
 import { formatPrice, PAYMENT_METHODS, DELIVERY_METHODS } from '@/lib/constants';
+import { fetchShippingChannels } from '@/lib/api/catalogService';
+import { createOrder, payOrder, buildOrderPayload, pickDefaultServiceProduct } from '@/lib/api/orderService';
+import { toast } from '@/components/ui/use-toast';
 
 const STEPS = [
   { id: 1, label: 'Address', icon: MapPin },
@@ -19,15 +23,28 @@ const STEPS = [
 
 export default function Checkout() {
   const { items, subtotal, clearCart, coupon } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [address, setAddress] = useState({ name: '', phone: '', area: '', town: '', county: '', instructions: '' });
   const [delivery, setDelivery] = useState('standard');
   const [payment, setPayment] = useState('mpesa');
   const [placing, setPlacing] = useState(false);
+  const [serviceProductId, setServiceProductId] = useState(null);
+  const [channelsError, setChannelsError] = useState(null);
+
+  useEffect(() => {
+    fetchShippingChannels()
+      .then((channels) => {
+        const picked = pickDefaultServiceProduct(channels);
+        if (picked) setServiceProductId(picked.id);
+        else setChannelsError('No shipping options available. Please try again later.');
+      })
+      .catch(() => setChannelsError('Could not load shipping options.'));
+  }, []);
 
   const deliveryMethod = DELIVERY_METHODS.find(d => d.id === delivery);
-  const discount = coupon ? Math.round(subtotal * 0.1) : 0;
+  const discount = coupon?.discount ?? 0;
   const total = subtotal + (deliveryMethod?.fee || 0) - discount;
 
   const canContinue = () => {
@@ -36,17 +53,49 @@ export default function Checkout() {
   };
 
   const placeOrder = async () => {
+    if (!serviceProductId) {
+      toast({ title: 'Checkout unavailable', description: channelsError || 'Shipping not configured', variant: 'destructive' });
+      return;
+    }
     setPlacing(true);
-    await new Promise(r => setTimeout(r, 1200));
-    const order = {
-      order_number: 'DM' + Math.floor(100000 + Math.random() * 900000),
-      items, total, address, delivery, payment, date: new Date().toISOString(),
-    };
-    const existing = JSON.parse(localStorage.getItem('dm_orders') || '[]');
-    localStorage.setItem('dm_orders', JSON.stringify([order, ...existing]));
-    clearCart();
-    setPlacing(false);
-    navigate('/order-success', { state: { order } });
+    try {
+      const payload = buildOrderPayload({
+        user,
+        address,
+        delivery,
+        items,
+        subtotal,
+        total,
+        coupon,
+        discount,
+        serviceProductId,
+      });
+      const order = await createOrder(payload);
+      await payOrder({
+        order_id: order.id,
+        method: payment,
+        amount: total,
+        currency: order.currency || 'KES',
+      });
+      await clearCart();
+      navigate('/order-success', {
+        state: {
+          order: {
+            order_number: order.order_number,
+            total: order.total_amount ?? total,
+            items,
+            address,
+            delivery,
+            payment,
+            date: order.created_at || new Date().toISOString(),
+          },
+        },
+      });
+    } catch (err) {
+      toast({ title: 'Order failed', description: err.message || 'Could not place order', variant: 'destructive' });
+    } finally {
+      setPlacing(false);
+    }
   };
 
   return (
@@ -55,6 +104,10 @@ export default function Checkout() {
       <PageTransition>
       <div className="max-w-3xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-6">Checkout</h1>
+
+        {channelsError && (
+          <div className="mb-4 p-3 rounded-lg bg-amber-50 text-amber-800 text-sm">{channelsError}</div>
+        )}
 
         <div className="flex items-center justify-between mb-8">
           {STEPS.map((s, i) => (
@@ -140,7 +193,7 @@ export default function Checkout() {
             {step < 4 ? (
               <button onClick={() => canContinue() && setStep(s => s + 1)} disabled={!canContinue()} className="btn-primary flex-1 py-3 disabled:opacity-40">Continue</button>
             ) : (
-              <button onClick={placeOrder} disabled={placing} className="btn-primary flex-1 py-3 disabled:opacity-60">
+              <button onClick={placeOrder} disabled={placing || !serviceProductId} className="btn-primary flex-1 py-3 disabled:opacity-60">
                 {placing ? 'Placing Order...' : `Place Order · ${formatPrice(total)}`}
               </button>
             )}

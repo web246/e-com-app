@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
 import TopBar from '@/components/layout/TopBar';
@@ -7,13 +7,13 @@ import PageTransition from '@/components/ui/PageTransition';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { SimpleSelect } from '@/components/ui/select';
 import ProductGrid from '@/components/home/ProductGrid';
-import { SAMPLE_PRODUCTS, CATEGORIES } from '@/lib/constants';
+import { enrichCategory } from '@/lib/constants';
+import { fetchProducts, fetchCategories } from '@/lib/api/catalogService';
 
 const SORT_OPTIONS = [
   { value: 'relevance', label: 'Most Relevant' },
   { value: 'price_asc', label: 'Price: Low to High' },
   { value: 'price_desc', label: 'Price: High to Low' },
-  { value: 'rating', label: 'Top Rated' },
 ];
 
 export default function Search() {
@@ -21,38 +21,74 @@ export default function Search() {
   const { slug } = useParams();
   const params = new URLSearchParams(search);
   const query = params.get('q') || '';
-  const filterParam = params.get('filter') || '';
   const [sort, setSort] = useState('relevance');
-  const [selectedCategory, setSelectedCategory] = useState(slug || '');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [freeShippingOnly, setFreeShippingOnly] = useState(false);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
-
-  useEffect(() => setSelectedCategory(slug || ''), [slug]);
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    fetchCategories()
+      .then((cats) => setCategories(cats.map(enrichCategory)))
+      .catch(() => setCategories([]));
+  }, []);
+
+  useEffect(() => {
+    if (slug && categories.length) {
+      const cat = categories.find((c) => c.slug === slug);
+      setSelectedCategory(slug);
+      setSelectedCategoryId(cat?.id ?? null);
+    } else if (!slug) {
+      setSelectedCategory('');
+      setSelectedCategoryId(null);
+    }
+  }, [slug, categories]);
+
+  const loadProducts = async () => {
     setLoading(true);
-    const t = setTimeout(() => {
-      let results = [...SAMPLE_PRODUCTS];
-      if (query) results = results.filter(p => p.name.toLowerCase().includes(query.toLowerCase()) || p.store_name.toLowerCase().includes(query.toLowerCase()));
-      if (selectedCategory) results = results.filter(p => p.category === selectedCategory);
-      if (filterParam === 'best_seller') results = results.filter(p => p.is_best_seller);
-      if (filterParam === 'new_arrival') results = results.filter(p => p.is_new_arrival);
-      if (freeShippingOnly) results = results.filter(p => p.free_shipping);
+    setError(null);
+    try {
+      const { items } = await fetchProducts({
+        page: 1,
+        page_size: 50,
+        search: query || undefined,
+        category_id: selectedCategoryId || undefined,
+      });
+      let results = items;
+      if (freeShippingOnly) results = results.filter((p) => p.free_shipping);
       if (sort === 'price_asc') results.sort((a, b) => a.price - b.price);
       else if (sort === 'price_desc') results.sort((a, b) => b.price - a.price);
-      else if (sort === 'rating') results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
       setProducts(results);
+    } catch (err) {
+      setError(err.message || 'Search failed');
+      setProducts([]);
+    } finally {
       setLoading(false);
-    }, 400);
-    return () => clearTimeout(t);
-  }, [query, sort, selectedCategory, freeShippingOnly, filterParam]);
+    }
+  };
+
+  useEffect(() => {
+    loadProducts();
+  }, [query, sort, selectedCategoryId, freeShippingOnly]);
+
+  const selectCategory = (cat) => {
+    if (selectedCategory === cat.slug) {
+      setSelectedCategory('');
+      setSelectedCategoryId(null);
+    } else {
+      setSelectedCategory(cat.slug);
+      setSelectedCategoryId(cat.id);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#EFF6FF]">
       <TopBar />
       <PageTransition>
-      <PullToRefresh onRefresh={async () => { setLoading(true); setTimeout(() => setLoading(false), 400); }}>
+      <PullToRefresh onRefresh={loadProducts}>
       <div className="max-w-7xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <div className="mb-6">
           <h1 className="font-display font-bold text-2xl text-[#0A0F1E]">
@@ -61,6 +97,10 @@ export default function Search() {
           <p className="text-slate-500 text-sm mt-1">{loading ? 'Searching...' : `${products.length} products found`}</p>
         </div>
 
+        {error && (
+          <div className="mb-4 rounded-xl bg-red-50 text-red-600 text-sm p-4">{error}</div>
+        )}
+
         <div className="flex gap-6">
           <aside className="w-64 flex-shrink-0 hidden lg:block">
             <div className="bg-white rounded-2xl p-5 shadow-sm sticky top-24">
@@ -68,10 +108,10 @@ export default function Search() {
               <div className="mb-5">
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Category</h4>
                 <div className="space-y-1">
-                  {CATEGORIES.slice(0, 10).map(cat => (
+                  {categories.slice(0, 10).map(cat => (
                     <button
-                      key={cat.slug}
-                      onClick={() => setSelectedCategory(selectedCategory === cat.slug ? '' : cat.slug)}
+                      key={cat.slug || cat.id}
+                      onClick={() => selectCategory(cat)}
                       className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-colors ${selectedCategory === cat.slug ? 'bg-blue-50 text-[#005BB5] font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}
                     >
                       {cat.name}
@@ -89,7 +129,7 @@ export default function Search() {
                 </label>
               </div>
               {(selectedCategory || freeShippingOnly) && (
-                <button onClick={() => { setSelectedCategory(''); setFreeShippingOnly(false); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 font-medium">
+                <button onClick={() => { setSelectedCategory(''); setSelectedCategoryId(null); setFreeShippingOnly(false); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 font-medium">
                   <X size={14} /> Clear Filters
                 </button>
               )}
@@ -99,10 +139,10 @@ export default function Search() {
           <div className="flex-1">
             <div className="flex items-center justify-between mb-5">
               <div className="flex gap-2 overflow-x-auto scrollbar-hide lg:hidden">
-                {CATEGORIES.slice(0, 6).map(cat => (
+                {categories.slice(0, 6).map(cat => (
                   <button
-                    key={cat.slug}
-                    onClick={() => setSelectedCategory(selectedCategory === cat.slug ? '' : cat.slug)}
+                    key={cat.slug || cat.id}
+                    onClick={() => selectCategory(cat)}
                     className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${selectedCategory === cat.slug ? 'bg-[#005BB5] text-white border-[#005BB5]' : 'bg-white text-slate-600 border-slate-200'}`}
                   >
                     {cat.name}
@@ -115,6 +155,9 @@ export default function Search() {
               </div>
             </div>
             <ProductGrid products={products} loading={loading} cols={4} />
+            {!loading && products.length === 0 && (
+              <p className="text-center text-slate-500 text-sm py-12">No products match your filters.</p>
+            )}
           </div>
         </div>
       </div>

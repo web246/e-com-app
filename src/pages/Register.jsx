@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/AuthContext";
+import { useAuth, getErrorMessage } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,7 @@ import { UserPlus, Mail, Lock, User as UserIcon, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 
 export default function Register() {
-  const { register, completeLogin } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,10 +31,9 @@ export default function Register() {
     setLoading(true);
     try {
       await register({ email, password, full_name: fullName });
-      completeLogin(email);
-      navigate("/");
+      navigate(`/verify-otp?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError(getErrorMessage(err, "Registration failed"));
     } finally {
       setLoading(false);
     }

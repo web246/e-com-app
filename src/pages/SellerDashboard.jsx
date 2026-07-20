@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LayoutDashboard, Package, ShoppingBag, TrendingUp, Settings, Plus } from 'lucide-react';
 import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
-import { SAMPLE_PRODUCTS, formatPrice } from '@/lib/constants';
+import { formatPrice } from '@/lib/constants';
+import { fetchProducts } from '@/lib/api/catalogService';
 
 const NAV = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -17,8 +18,12 @@ const REVENUE = [12, 18, 14, 22, 19, 28, 24];
 
 export default function SellerDashboard() {
   const [tab, setTab] = useState('overview');
-  const myProducts = SAMPLE_PRODUCTS.slice(0, 4);
+  const [myProducts, setMyProducts] = useState([]);
   const maxRev = Math.max(...REVENUE);
+
+  useEffect(() => {
+    fetchProducts({ page: 1, page_size: 4 }).then(({ items }) => setMyProducts(items)).catch(() => setMyProducts([]));
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#EFF6FF]">

@@ -11,25 +11,35 @@ import FeaturedStores from '@/components/home/FeaturedStores';
 import FlashSale from '@/components/home/FlashSale';
 import ProductGrid from '@/components/home/ProductGrid';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { SAMPLE_PRODUCTS } from '@/lib/constants';
+import { fetchProducts } from '@/lib/api/catalogService';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
+
+  const loadProducts = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { items } = await fetchProducts({ page: 1, page_size: 20 });
+      setProducts(items);
+    } catch (err) {
+      setError(err.message || 'Failed to load products');
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(t);
+    loadProducts();
   }, []);
 
-  const trending = SAMPLE_PRODUCTS;
-  const bestSellers = [...SAMPLE_PRODUCTS].reverse();
-  const newArrivals = SAMPLE_PRODUCTS.filter(p => p.is_new_arrival || p.is_best_seller).slice(0, 4);
-
-  const handleRefresh = async () => {
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 700));
-    setLoading(false);
-  };
+  const trending = products;
+  const bestSellers = [...products].reverse();
+  const newArrivals = products.slice(0, 4);
+  const flashProducts = products.filter((p) => p.discount_percent > 0).slice(0, 4);
 
   return (
     <div className="min-h-screen bg-[#EFF6FF]">
@@ -42,8 +52,15 @@ export default function Home() {
         </div>
       </div>
 
-      <PullToRefresh onRefresh={handleRefresh}>
+      <PullToRefresh onRefresh={loadProducts}>
       <div className="max-w-7xl mx-auto px-3 sm:px-4 space-y-10 sm:space-y-16 pb-28 md:pb-16">
+        {error && (
+          <div className="rounded-xl bg-red-50 text-red-600 text-sm p-4 flex items-center justify-between">
+            <span>{error}</span>
+            <button onClick={loadProducts} className="font-semibold underline">Retry</button>
+          </div>
+        )}
+
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -59,18 +76,21 @@ export default function Home() {
           <PromoCards />
         </section>
 
-        <FlashSale />
+        <FlashSale products={flashProducts} />
 
         <section>
           <SectionHeader title="Trending Now" subtitle="What everyone's buying this week" viewAllTo="/search?sort=trending" badge="📈 Trending" />
           <ProductGrid products={trending} loading={loading} />
+          {!loading && products.length === 0 && (
+            <p className="text-center text-slate-500 text-sm py-8">No products available yet. Check back soon.</p>
+          )}
         </section>
 
         <FeaturedStores />
 
         <section>
           <SectionHeader title="Best Sellers" subtitle="Trusted favourites across Kenya" viewAllTo="/search?filter=best_seller" badge="🏆 Top Rated" />
-          <ProductGrid products={bestSellers.slice(0, 8)} loading={loading} />
+          <ProductGrid products={bestSellers.slice(0, 8)} loading={loading} cols={4} />
         </section>
 
         <section>

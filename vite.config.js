@@ -12,6 +12,13 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    proxy: {
+      '/api/v1': {
+        target: 'https://salamexporters.com',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   build: {
     outDir: 'dist',

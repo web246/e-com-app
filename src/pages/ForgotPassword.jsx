@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth, getErrorMessage } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,16 +8,24 @@ import { Mail, ArrowLeft, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 
 export default function ForgotPassword() {
+  const { forgotPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 600));
-    setLoading(false);
-    setSent(true);
+    setError("");
+    try {
+      await forgotPassword(email);
+      setSent(true);
+    } catch (err) {
+      setError(getErrorMessage(err, "Could not send reset email"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,6 +39,9 @@ export default function ForgotPassword() {
         </Link>
       }
     >
+      {error && (
+        <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm">{error}</div>
+      )}
       {sent ? (
         <p className="text-sm text-[#0A0F1E] text-center">
           If an account exists with that email, you'll receive a password reset link shortly.

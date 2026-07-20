@@ -1,15 +1,16 @@
-import { useState, useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Heart, Minus, Plus, Truck, ShieldCheck, RotateCcw, ChevronLeft } from 'lucide-react';
 import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import ProductGrid from '@/components/home/ProductGrid';
-import { SAMPLE_PRODUCTS, formatPrice } from '@/lib/constants';
+import { formatPrice } from '@/lib/constants';
 import { useCart } from '@/lib/useCart';
 import { useWishlist } from '@/lib/useWishlist';
 import { toast } from '@/components/ui/use-toast';
+import { fetchProduct, fetchProducts } from '@/lib/api/catalogService';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -19,19 +20,64 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState(0);
   const [tab, setTab] = useState('description');
+  const [product, setProduct] = useState(null);
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const product = useMemo(() => SAMPLE_PRODUCTS.find(p => p.id === id) || SAMPLE_PRODUCTS[0], [id]);
-  const related = SAMPLE_PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const p = await fetchProduct(id);
+        setProduct(p);
+        const { items } = await fetchProducts({ page: 1, page_size: 8 });
+        setRelated(items.filter((r) => r.id !== p.id).slice(0, 4));
+      } catch (err) {
+        setError(err.message || 'Product not found');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#EFF6FF] flex items-center justify-center">
+        <p className="text-slate-500">Loading product...</p>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className="min-h-screen bg-[#EFF6FF] flex flex-col items-center justify-center gap-4">
+        <p className="text-slate-500">{error || 'Product not found'}</p>
+        <button onClick={() => navigate('/')} className="btn-primary px-6 py-2">Back to home</button>
+      </div>
+    );
+  }
+
   const wishlisted = isWishlisted(product.id);
+  const images = product.images?.length ? product.images : product.thumbnail ? [product.thumbnail] : [];
 
-  const handleAddToCart = () => {
-    addItem(product, qty);
-    toast({ title: 'Added to cart', description: `${qty} × ${product.name}` });
+  const handleAddToCart = async () => {
+    try {
+      await addItem(product, qty);
+      toast({ title: 'Added to cart', description: `${qty} × ${product.name}` });
+    } catch (err) {
+      toast({ title: 'Could not add to cart', description: err.message, variant: 'destructive' });
+    }
   };
 
-  const handleBuyNow = () => {
-    addItem(product, qty);
-    navigate('/cart');
+  const handleBuyNow = async () => {
+    try {
+      await addItem(product, qty);
+      navigate('/cart');
+    } catch (err) {
+      toast({ title: 'Could not add to cart', description: err.message, variant: 'destructive' });
+    }
   };
 
   return (
@@ -46,11 +92,15 @@ export default function ProductDetail() {
         <div className="grid md:grid-cols-2 gap-8">
           <div>
             <div className="aspect-square rounded-3xl overflow-hidden bg-white shadow-lg mb-3">
-              <img src={product.images[activeImg] || product.thumbnail} alt={product.name} className="w-full h-full object-cover" />
+              {images[activeImg] ? (
+                <img src={images[activeImg]} alt={product.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-blue-50" />
+              )}
             </div>
-            {product.images.length > 1 && (
+            {images.length > 1 && (
               <div className="flex gap-2">
-                {product.images.map((img, i) => (
+                {images.map((img, i) => (
                   <button key={i} onClick={() => setActiveImg(i)} className={`w-16 h-16 rounded-xl overflow-hidden border-2 ${activeImg === i ? 'border-[#005BB5]' : 'border-transparent'}`}>
                     <img src={img} alt="" className="w-full h-full object-cover" />
                   </button>
@@ -65,9 +115,11 @@ export default function ProductDetail() {
             <div className="flex items-center gap-2 mb-4">
               <div className="flex items-center gap-1">
                 <Star size={16} className="fill-amber-400 text-amber-400" />
-                <span className="font-semibold text-sm">{product.rating}</span>
+                <span className="font-semibold text-sm">{product.rating || '—'}</span>
               </div>
-              <span className="text-sm text-slate-400">({product.reviews_count} reviews) · {product.sold_count} sold</span>
+              {product.reviews_count > 0 && (
+                <span className="text-sm text-slate-400">({product.reviews_count} reviews)</span>
+              )}
             </div>
 
             <div className="flex items-baseline gap-3 mb-1">
@@ -82,9 +134,8 @@ export default function ProductDetail() {
               <div className="flex items-center border border-slate-200 rounded-xl bg-white">
                 <button onClick={() => setQty(q => Math.max(1, q - 1))} className="p-2.5"><Minus size={14} /></button>
                 <span className="w-10 text-center font-semibold">{qty}</span>
-                <button onClick={() => setQty(q => Math.min(product.stock, q + 1))} className="p-2.5"><Plus size={14} /></button>
+                <button onClick={() => setQty(q => q + 1)} className="p-2.5"><Plus size={14} /></button>
               </div>
-              <span className="text-xs text-slate-400">{product.stock} in stock</span>
             </div>
 
             <div className="flex gap-3 mb-6">
@@ -126,20 +177,18 @@ export default function ProductDetail() {
           </div>
           {tab === 'description' && (
             <p className="text-slate-600 leading-relaxed max-w-2xl">
-              {product.name} from {product.store_name} — a top-rated pick with {product.reviews_count} reviews and a {product.rating} star average.
-              Crafted for everyday reliability with fast dispatch from a verified seller on Dennis Mendez.
+              {product.description || `${product.name} from ${product.store_name}.`}
             </p>
           )}
           {tab === 'specifications' && (
             <div className="grid grid-cols-2 gap-3 max-w-lg text-sm">
               <div className="text-slate-400">Brand</div><div className="text-slate-700 font-medium">{product.store_name}</div>
-              <div className="text-slate-400">Category</div><div className="text-slate-700 font-medium capitalize">{product.category}</div>
-              <div className="text-slate-400">Stock</div><div className="text-slate-700 font-medium">{product.stock} units</div>
-              <div className="text-slate-400">SKU</div><div className="text-slate-700 font-medium">{product.id.toUpperCase()}</div>
+              <div className="text-slate-400">Weight</div><div className="text-slate-700 font-medium">{product.weight || '—'} kg</div>
+              <div className="text-slate-400">SKU</div><div className="text-slate-700 font-medium">{product.slug || product.id}</div>
             </div>
           )}
           {tab === 'reviews' && (
-            <p className="text-slate-500 text-sm">{product.reviews_count} customers rated this product an average of {product.rating} / 5.</p>
+            <p className="text-slate-500 text-sm">Reviews will appear here once available.</p>
           )}
         </div>
 

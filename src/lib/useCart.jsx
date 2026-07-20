@@ -1,43 +1,91 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { useAuth } from '@/lib/AuthContext';
+import * as cartApi from '@/lib/api/cartService';
+import { validateCoupon } from '@/lib/api/orderService';
 
 const CartContext = createContext(null);
-const STORAGE_KEY = 'linet_cart';
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
-  });
+  const { isAuthenticated } = useAuth();
+  const [items, setItems] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [currency, setCurrency] = useState('KES');
   const [coupon, setCoupon] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const applyCartResponse = (data) => {
+    setItems(data.items || []);
+    setSubtotal(data.subtotal ?? 0);
+    setCurrency(data.currency || 'KES');
+  };
+
+  const reload = useCallback(async () => {
+    if (!isAuthenticated) {
+      setItems([]);
+      setSubtotal(0);
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await cartApi.getCart();
+      applyCartResponse(data);
+    } catch {
+      setItems([]);
+      setSubtotal(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+    reload();
+    if (!isAuthenticated) setCoupon(null);
+  }, [reload, isAuthenticated]);
 
-  const addItem = (product, quantity = 1, variant = null) => {
-    const key = variant ? `${product.id}_${variant}` : product.id;
-    setItems(prev => {
-      const existing = prev.find(i => i.key === key);
-      if (existing) {
-        return prev.map(i => i.key === key ? { ...i, quantity: i.quantity + quantity } : i);
-      }
-      return [...prev, { key, product, quantity, variant }];
-    });
+  const addItem = async (product, quantity = 1) => {
+    if (!isAuthenticated) throw new Error('Please log in to add items to your cart');
+    const data = await cartApi.addCartItem(product.id, quantity);
+    applyCartResponse(data);
   };
 
-  const removeItem = (key) => setItems(prev => prev.filter(i => i.key !== key));
+  const removeItem = async (key) => {
+    const item = items.find((i) => i.key === key);
+    if (!item) return;
+    const data = await cartApi.removeCartItem(item.product_id);
+    applyCartResponse(data);
+  };
 
-  const updateQuantity = (key, qty) => {
+  const updateQuantity = async (key, qty) => {
+    const item = items.find((i) => i.key === key);
+    if (!item) return;
     if (qty <= 0) return removeItem(key);
-    setItems(prev => prev.map(i => i.key === key ? { ...i, quantity: qty } : i));
+    const data = await cartApi.updateCartItem(item.product_id, qty);
+    applyCartResponse(data);
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = async () => {
+    for (const item of [...items]) {
+      await cartApi.removeCartItem(item.product_id);
+    }
+    setItems([]);
+    setSubtotal(0);
+    setCoupon(null);
+  };
+
+  const applyCoupon = async (code) => {
+    const result = await validateCoupon(code, subtotal);
+    setCoupon({ code, discount: result.discount, message: result.message });
+    return result;
+  };
 
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
-  const subtotal = items.reduce((sum, i) => sum + (i.product.price * i.quantity), 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotal, coupon, setCoupon }}>
+    <CartContext.Provider value={{
+      items, addItem, removeItem, updateQuantity, clearCart,
+      itemCount, subtotal, currency, coupon, setCoupon, applyCoupon,
+      loading, reload,
+    }}>
       {children}
     </CartContext.Provider>
   );

@@ -11,22 +11,34 @@ export default function ProductCard({ product }) {
   const { addItem } = useCart();
   const wishlisted = isWishlisted(product.id);
 
-  const handleWishlist = (e) => {
+  const handleWishlist = async (e) => {
     e.preventDefault();
-    toggle(product);
+    try {
+      await toggle(product);
+    } catch (err) {
+      toast({ title: 'Wishlist', description: err.message, variant: 'destructive' });
+    }
   };
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
-    addItem(product, 1);
-    toast({ title: 'Added to cart', description: product.name });
+    try {
+      await addItem(product, 1);
+      toast({ title: 'Added to cart', description: product.name });
+    } catch (err) {
+      toast({ title: 'Cart', description: err.message, variant: 'destructive' });
+    }
   };
 
   return (
     <motion.div whileHover={{ y: -4 }} className="linet-card overflow-hidden hydro-shadow-hover group">
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative aspect-square bg-blue-50 overflow-hidden">
-          <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+          {product.thumbnail ? (
+            <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-slate-300 text-sm">No image</div>
+          )}
           <div className="absolute top-2 left-2 flex flex-col gap-1">
             {product.discount_percent > 0 && (
               <span className="bg-[#E67A00] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">-{product.discount_percent}%</span>
@@ -49,14 +61,17 @@ export default function ProductCard({ product }) {
           <p className="text-[11px] text-slate-400 mb-0.5">{product.store_name}</p>
           <h3 className="font-medium text-sm text-[#0A0F1E] line-clamp-2 leading-snug mb-1.5 min-h-[2.5em]">{product.name}</h3>
           <div className="flex items-center gap-1 mb-1.5">
-            <Star size={12} className="fill-amber-400 text-amber-400" />
-            <span className="text-xs text-slate-500">{product.rating} ({product.reviews_count})</span>
+            {product.rating > 0 && (
+              <>
+                <Star size={11} className="fill-amber-400 text-amber-400" />
+                <span className="text-[11px] text-slate-500">{product.rating}</span>
+              </>
+            )}
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="price-display text-sm">{formatPrice(product.price, product.currency)}</span>
             {product.old_price && <span className="text-xs text-slate-400 line-through">{formatPrice(product.old_price, product.currency)}</span>}
           </div>
-          {product.free_shipping && <span className="text-[10px] text-green-600 font-semibold">Free Shipping</span>}
         </div>
       </Link>
     </motion.div>

@@ -5,16 +5,30 @@ import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import { formatPrice } from '@/lib/constants';
+import { fetchCustomerOrders, orderStatusIndex } from '@/lib/api/orderService';
 
 const STAGES = ['confirmed', 'packed', 'shipped', 'out_for_delivery', 'delivered'];
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [expanded, setExpanded] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setOrders(JSON.parse(localStorage.getItem('dm_orders') || '[]'));
+    fetchCustomerOrders({ page: 1, page_size: 50 })
+      .then(({ items }) => setOrders(items))
+      .catch((err) => setError(err.message || 'Failed to load orders'))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#EFF6FF] flex items-center justify-center">
+        <p className="text-slate-500">Loading orders...</p>
+      </div>
+    );
+  }
 
   if (orders.length === 0) {
     return (
@@ -26,7 +40,7 @@ export default function Orders() {
             <Package size={40} className="text-[#005BB5]" />
           </div>
           <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-2">No orders yet</h1>
-          <p className="text-slate-500">Your order history will show up here once you check out.</p>
+          <p className="text-slate-500">{error || 'Your order history will show up here once you check out.'}</p>
         </div>
         </PageTransition>
         <BottomNav />
@@ -43,49 +57,39 @@ export default function Orders() {
         <div className="space-y-4">
           {orders.map((order, idx) => {
             const isOpen = expanded === idx;
-            const stageIdx = 2;
+            const stageIdx = Math.min(orderStatusIndex(order.status), STAGES.length - 1);
+            const orderNumber = order.order_number || order.id;
+            const orderDate = order.created_at || order.order_date;
+            const total = order.total_amount ?? order.commerce_grand_total ?? 0;
+
             return (
-              <div key={order.order_number} className="linet-card overflow-hidden">
+              <div key={order.id || orderNumber} className="linet-card overflow-hidden">
                 <button onClick={() => setExpanded(isOpen ? null : idx)} className="w-full p-4 flex items-center justify-between text-left">
                   <div>
-                    <p className="font-display font-bold text-sm text-[#0A0F1E]">Order #{order.order_number}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{new Date(order.date).toLocaleDateString()} · {order.items?.length} item(s)</p>
+                    <p className="font-display font-bold text-sm text-[#0A0F1E]">Order #{orderNumber}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      {orderDate ? new Date(orderDate).toLocaleDateString() : '—'} · {order.status?.replace(/_/g, ' ')}
+                    </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="price-display text-sm">{formatPrice(order.total)}</span>
+                    <span className="price-display text-sm">{formatPrice(total, order.currency)}</span>
                     <ChevronDown size={18} className={`text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
 
                 <AnimatePresence>
                   {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="px-4 pb-4"
-                    >
-                      <div className="flex items-center justify-between mb-4 mt-2">
-                        {STAGES.map((s, i) => (
-                          <div key={s} className="flex-1 flex flex-col items-center relative">
-                            <div className={`w-3 h-3 rounded-full z-10 ${i <= stageIdx ? 'bg-[#005BB5]' : 'bg-slate-200'}`} />
-                            {i < STAGES.length - 1 && <div className={`absolute top-1.5 left-1/2 w-full h-0.5 ${i < stageIdx ? 'bg-[#005BB5]' : 'bg-slate-200'}`} />}
-                            <span className="text-[9px] text-slate-400 mt-1.5 capitalize text-center">{s.replace('_', ' ')}</span>
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="border-t border-slate-100 px-4 pb-4">
+                      <div className="flex items-center gap-1 mt-4 mb-3 overflow-x-auto">
+                        {STAGES.map((stage, si) => (
+                          <div key={stage} className={`flex-shrink-0 text-[10px] font-semibold px-2 py-1 rounded-full ${si <= stageIdx ? 'bg-[#005BB5] text-white' : 'bg-slate-100 text-slate-400'}`}>
+                            {stage.replace(/_/g, ' ')}
                           </div>
                         ))}
                       </div>
-                      <div className="flex items-start gap-2 text-xs text-slate-500 mb-3">
-                        <MapPin size={13} className="mt-0.5 flex-shrink-0" />
-                        <span>{order.address?.name}, {order.address?.area}, {order.address?.town}</span>
-                      </div>
-                      <div className="space-y-2">
-                        {order.items?.map(it => (
-                          <div key={it.key} className="flex items-center gap-2 text-sm">
-                            <img src={it.product.thumbnail} className="w-10 h-10 rounded-lg object-cover" alt="" />
-                            <span className="flex-1 text-[#0A0F1E] line-clamp-1">{it.product.name}</span>
-                            <span className="text-slate-400">×{it.quantity}</span>
-                          </div>
-                        ))}
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <MapPin size={14} className="text-[#005BB5] mt-0.5 flex-shrink-0" />
+                        <span>{order.delivery_contact_name}, {order.delivery_contact_phone}</span>
                       </div>
                     </motion.div>
                   )}

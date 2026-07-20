@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Zap } from 'lucide-react';
-import { SAMPLE_PRODUCTS, formatPrice } from '@/lib/constants';
+import { formatPrice } from '@/lib/constants';
 
 function useCountdown() {
   const [time, setTime] = useState(3 * 3600 + 24 * 60 + 15);
@@ -15,9 +15,9 @@ function useCountdown() {
   return { h, m, s };
 }
 
-export default function FlashSale() {
+export default function FlashSale({ products = [] }) {
   const { h, m, s } = useCountdown();
-  const flashItems = SAMPLE_PRODUCTS.filter(p => p.is_flash_sale);
+  const flashItems = products.filter((p) => p.discount_percent > 0);
 
   if (flashItems.length === 0) return null;
 
@@ -34,23 +34,23 @@ export default function FlashSale() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {flashItems.map(p => {
-          const soldPct = Math.min(95, Math.round((1 - p.flash_sale_stock / 50) * 100));
-          return (
-            <Link key={p.id} to={`/product/${p.id}`} className="bg-white rounded-2xl overflow-hidden">
-              <div className="aspect-square overflow-hidden">
+        {flashItems.map(p => (
+          <Link key={p.id} to={`/product/${p.id}`} className="bg-white rounded-2xl overflow-hidden">
+            <div className="aspect-square overflow-hidden">
+              {p.thumbnail ? (
                 <img src={p.thumbnail} alt={p.name} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-2.5">
-                <p className="price-display text-sm">{formatPrice(p.price, p.currency)}</p>
-                <div className="mt-1.5 h-1.5 bg-orange-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-[#E67A00] rounded-full" style={{ width: `${soldPct}%` }} />
-                </div>
-                <p className="text-[10px] text-slate-500 mt-1">{p.flash_sale_stock} left</p>
-              </div>
-            </Link>
-          );
-        })}
+              ) : (
+                <div className="w-full h-full bg-orange-50" />
+              )}
+            </div>
+            <div className="p-2.5">
+              <p className="price-display text-sm">{formatPrice(p.price, p.currency)}</p>
+              {p.discount_percent > 0 && (
+                <p className="text-[10px] text-slate-500 mt-1">-{p.discount_percent}% off</p>
+              )}
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );

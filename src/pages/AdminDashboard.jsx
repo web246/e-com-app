@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LayoutDashboard, Users, Store, Package, Tag } from 'lucide-react';
 import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
-import { STORES, formatPrice } from '@/lib/constants';
+import { formatPrice } from '@/lib/constants';
+import { fetchStores } from '@/lib/api/catalogService';
 
 const NAV = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -15,6 +16,11 @@ const NAV = [
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState('overview');
+  const [stores, setStores] = useState([]);
+
+  useEffect(() => {
+    fetchStores({ page: 1, page_size: 20 }).then(({ items }) => setStores(items)).catch(() => setStores([]));
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#EFF6FF]">
@@ -51,7 +57,7 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
                   { label: 'Total GMV', value: formatPrice(4820000) },
-                  { label: 'Active Sellers', value: STORES.length },
+                  { label: 'Active Sellers', value: stores.length },
                   { label: 'Total Users', value: '18,204' },
                   { label: 'Pending Approvals', value: '3' },
                 ].map(s => (
@@ -67,9 +73,13 @@ export default function AdminDashboard() {
               <div className="linet-card p-5">
                 <h2 className="font-display font-bold text-base text-[#0A0F1E] mb-4">Registered Sellers</h2>
                 <div className="space-y-3">
-                  {STORES.map(s => (
+                  {stores.map(s => (
                     <div key={s.id} className="flex items-center gap-3 pb-3 border-b border-slate-100 last:border-0 last:pb-0">
-                      <img src={s.logo_url} className="w-11 h-11 rounded-xl object-cover" alt="" />
+                      {s.logo_url ? (
+                        <img src={s.logo_url} className="w-11 h-11 rounded-xl object-cover" alt="" />
+                      ) : (
+                        <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-[#005BB5] font-bold">{s.name?.charAt(0)}</div>
+                      )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-[#0A0F1E]">{s.name}</p>
                         <p className="text-xs text-slate-400">{s.category} · {s.rating}★</p>

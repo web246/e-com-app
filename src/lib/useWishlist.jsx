@@ -1,29 +1,47 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { useAuth } from '@/lib/AuthContext';
+import * as wishlistApi from '@/lib/api/wishlistService';
 
 const WishlistContext = createContext(null);
-const STORAGE_KEY = 'linet_wishlist';
 
 export function WishlistProvider({ children }) {
-  const [items, setItems] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
-  });
+  const { isAuthenticated } = useAuth();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const reload = useCallback(async () => {
+    if (!isAuthenticated) {
+      setItems([]);
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await wishlistApi.getWishlist();
+      setItems(data);
+    } catch {
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+    reload();
+  }, [reload]);
 
-  const toggle = (product) => {
-    setItems(prev => {
-      const exists = prev.find(p => p.id === product.id);
-      if (exists) return prev.filter(p => p.id !== product.id);
-      return [...prev, product];
-    });
+  const toggle = async (product) => {
+    if (!isAuthenticated) throw new Error('Please log in to manage your wishlist');
+    const exists = items.some((p) => p.id === product.id);
+    const data = exists
+      ? await wishlistApi.removeWishlistItem(product.id)
+      : await wishlistApi.addWishlistItem(product.id);
+    setItems(data);
   };
 
-  const isWishlisted = (id) => items.some(p => p.id === id);
+  const isWishlisted = (id) => items.some((p) => p.id === id);
 
   return (
-    <WishlistContext.Provider value={{ items, toggle, isWishlisted, count: items.length }}>
+    <WishlistContext.Provider value={{ items, toggle, isWishlisted, count: items.length, loading, reload }}>
       {children}
     </WishlistContext.Provider>
   );

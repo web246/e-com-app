@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/AuthContext";
+import { useAuth, getErrorMessage } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,7 +23,11 @@ export default function Login() {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      setError(err.message || "Invalid email or password");
+      const msg = getErrorMessage(err, "Invalid email or password");
+      setError(msg);
+      if (err?.code === "UNVERIFIED" || msg.toLowerCase().includes("verify")) {
+        navigate(`/verify-otp?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -48,15 +52,6 @@ export default function Login() {
           {error}
         </div>
       )}
-
-      <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
-        <p className="font-semibold text-slate-800">Demo accounts</p>
-        <ul className="mt-2 space-y-1">
-          <li><button type="button" onClick={() => { setEmail("admin@example.com"); setPassword("admin123"); }} className="text-left text-[#005BB5] hover:underline">Admin: admin@example.com / admin123</button></li>
-          <li><button type="button" onClick={() => { setEmail("buyer@example.com"); setPassword("buyer123"); }} className="text-left text-[#005BB5] hover:underline">Buyer: buyer@example.com / buyer123</button></li>
-          <li><button type="button" onClick={() => { setEmail("seller@example.com"); setPassword("seller123"); }} className="text-left text-[#005BB5] hover:underline">Seller: seller@example.com / seller123</button></li>
-        </ul>
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -101,10 +96,6 @@ export default function Login() {
           {loading ? (<><Loader2 className="w-4 h-4 animate-spin" /> Logging in...</>) : "Log in"}
         </Button>
       </form>
-
-      <p className="text-center text-xs text-slate-400 mt-5">
-        Demo mode: accounts are stored on this device only.
-      </p>
     </AuthLayout>
   );
 }
