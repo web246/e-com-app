@@ -16,12 +16,23 @@ test('seedMockUsers creates demo accounts', () => {
   const storage = createMemoryStorage();
   const users = seedMockUsers(storage);
 
-  assert.equal(users.length, 3);
+  assert.equal(users.length, 4);
   assert.deepEqual(users.map((user) => user.email), [
     'demo@dennismendez.com',
+    'customer@example.com',
     'seller@dennismendez.com',
     'admin@dennismendez.com',
   ]);
+});
+
+test('seedMockUsers includes the customer demo account', () => {
+  const storage = createMemoryStorage();
+  const users = seedMockUsers(storage);
+  const customer = users.find((user) => user.email === 'customer@example.com');
+
+  assert.ok(customer);
+  assert.equal(customer.password, 'password123');
+  assert.equal(customer.role, 'customer');
 });
 
 test('authenticateMockUser returns a mock session for seeded credentials', () => {

@@ -11,6 +11,15 @@ const demoUsers = [
     verified: true,
   },
   {
+    id: 'customer-example',
+    email: 'customer@example.com',
+    password: 'password123',
+    full_name: 'Customer Example',
+    phone: '+254700000004',
+    role: 'customer',
+    verified: true,
+  },
+  {
     id: 'demo-seller',
     email: 'seller@dennismendez.com',
     password: 'Password123!',
