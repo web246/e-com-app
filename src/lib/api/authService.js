@@ -3,8 +3,9 @@ import { setTokens, clearTokens } from './tokenStorage';
 import { mapUser, splitFullName } from '../mappers/userMapper';
 import { authenticateMockUser, seedMockUsers } from './mockAuth';
 
-function shouldUseMockAuth() {
-  return import.meta.env.DEV && import.meta.env.VITE_USE_MOCK_AUTH === 'true';
+export function shouldUseMockAuth(env = import.meta.env) {
+  if (env.VITE_USE_MOCK_AUTH === 'false') return false;
+  return env.PROD || env.VITE_USE_MOCK_AUTH === 'true';
 }
 
 export async function login(email, password) {
