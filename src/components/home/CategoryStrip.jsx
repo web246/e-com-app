@@ -33,15 +33,15 @@ export default function CategoryStrip() {
             >
               <Icon size={24} style={{ color: cat.color }} />
             </div>
-            <span className="text-xs font-medium text-slate-600 text-center leading-tight">{cat.name}</span>
+            <span className="text-xs font-medium text-[#5a463b] text-center leading-tight">{cat.name}</span>
           </Link>
         );
       })}
       <Link to="/categories" className="flex flex-col items-center gap-2 flex-shrink-0 w-16 sm:w-20 category-pill">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center bg-slate-100">
-          <Grid3X3 size={24} className="text-slate-500" />
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center bg-brown-light border border-[#D9D2CB]/70">
+          <Grid3X3 size={24} className="text-brand" />
         </div>
-        <span className="text-xs font-medium text-slate-600 text-center leading-tight">More</span>
+        <span className="text-xs font-medium text-brown text-center leading-tight">More</span>
       </Link>
     </div>
   );

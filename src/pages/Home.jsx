@@ -46,7 +46,7 @@ export default function Home() {
       <TopBar />
       <PageTransition>
 
-      <div className="relative pt-28 pb-4 sm:pb-6 bg-gradient-to-b from-[#003D8F] via-[#005BB5] to-[#EFF6FF]">
+      <div className="relative pt-28 pb-4 sm:pb-6 bg-gradient-to-b from-[#4A2A1A] via-[#6D3F23] to-[#F6EBDD]">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-6">
           <HeroBanner />
         </div>

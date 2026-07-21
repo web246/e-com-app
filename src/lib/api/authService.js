@@ -1,8 +1,20 @@
 import { apiGet, apiPost } from './apiClient';
 import { setTokens, clearTokens } from './tokenStorage';
 import { mapUser, splitFullName } from '../mappers/userMapper';
+import { authenticateMockUser, seedMockUsers } from './mockAuth';
+
+function shouldUseMockAuth() {
+  return import.meta.env.DEV && import.meta.env.VITE_USE_MOCK_AUTH === 'true';
+}
 
 export async function login(email, password) {
+  if (shouldUseMockAuth()) {
+    const data = authenticateMockUser(email, password);
+    setTokens(data.tokens);
+    seedMockUsers();
+    return { user: data.user, tokens: data.tokens };
+  }
+
   const data = await apiPost('/auth/login', { email, password }, { skipAuth: true });
   setTokens(data);
   return { user: mapUser(data.user), tokens: data };

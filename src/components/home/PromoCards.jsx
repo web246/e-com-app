@@ -26,8 +26,8 @@ export default function PromoCards() {
               <Icon size={18} style={{ color: promo.color }} />
             </div>
             <div>
-              <p className="font-display font-semibold text-sm text-[#0A0F1E]">{promo.title}</p>
-              <p className="text-xs text-slate-500">{promo.subtitle}</p>
+              <p className="font-display font-semibold text-sm text-brown">{promo.title}</p>
+              <p className="text-xs text-[#6f5848]">{promo.subtitle}</p>
             </div>
           </motion.div>
         );

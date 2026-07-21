@@ -4,10 +4,10 @@
   "description": "Everything You Need, Delivered.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#EFF6FF",
-  "theme_color": "#005BB5",
+  "background_color": "#F6EFE9",
+  "theme_color": "#2EC4FF",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/assets/app-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/app-icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }

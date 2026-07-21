@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Package, Tag, Star, Truck } from 'lucide-react';
+import logo from '@/assets/logo.png';
 import { useAuth } from '@/lib/AuthContext';
 
 const floatingIcons = [
@@ -53,11 +54,11 @@ export default function Splash() {
         transition={{ duration: 0.8, type: 'spring', stiffness: 200 }}
       >
         <motion.div
-          className="w-28 h-28 bg-white rounded-[2.5rem] shadow-2xl flex items-center justify-center mb-8"
-          animate={{ boxShadow: ['0 20px 60px rgba(0,0,0,0.3)', '0 30px 80px rgba(0,91,181,0.5)', '0 20px 60px rgba(0,0,0,0.3)'] }}
+          className="w-28 h-28 bg-white rounded-[2.5rem] shadow-2xl flex items-center justify-center mb-8 overflow-hidden"
+          animate={{ boxShadow: ['0 20px 60px rgba(0,0,0,0.3)', '0 30px 80px rgba(30,110,216,0.45)', '0 20px 60px rgba(0,0,0,0.3)'] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <span className="text-[#005BB5] font-bold text-5xl font-display">D</span>
+          <img src={logo} alt="Dennis Mendez" className="w-20 h-20 object-contain" />
         </motion.div>
 
         <motion.h1

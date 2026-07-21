@@ -41,23 +41,23 @@ export default function Login() {
       footer={
         <>
           Don't have an account?{" "}
-          <Link to="/register" className="text-[#005BB5] font-semibold hover:underline">
+          <Link to="/register" className="text-[#421313] font-semibold hover:underline">
             Create one
           </Link>
         </>
       }
     >
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm">
+        <div className="mb-4 rounded-xl border border-[#E54545]/20 bg-[#FFF1F1] p-3 text-sm text-[#C53A3A]">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email" className="text-[#421313]">Email</Label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 w-4 h-4 -translate-y-1/2 text-[#6f5848]" />
             <Input
               id="email"
               type="email"
@@ -66,20 +66,20 @@ export default function Login() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 h-12"
+              className="h-12 pl-10 border-[#D9D2CB] bg-white text-[#421313] placeholder:text-[#8b6f63] focus:border-[#46B8FF] focus:ring-[#46B8FF]/20"
               required
             />
           </div>
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
-            <Link to="/forgot-password" className="text-xs text-[#005BB5] hover:underline">
+            <Label htmlFor="password" className="text-[#421313]">Password</Label>
+            <Link to="/forgot-password" className="text-xs font-semibold text-[#421313] hover:underline">
               Forgot password?
             </Link>
           </div>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Lock className="absolute left-3 top-1/2 w-4 h-4 -translate-y-1/2 text-[#6f5848]" />
             <Input
               id="password"
               type="password"
@@ -87,12 +87,12 @@ export default function Login() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 h-12"
+              className="h-12 pl-10 border-[#D9D2CB] bg-white text-[#421313] placeholder:text-[#8b6f63] focus:border-[#46B8FF] focus:ring-[#46B8FF]/20"
               required
             />
           </div>
         </div>
-        <Button type="submit" className="w-full h-12" disabled={loading}>
+        <Button type="submit" className="h-12 w-full bg-[#541B1B] text-white hover:bg-[#421313]" disabled={loading}>
           {loading ? (<><Loader2 className="w-4 h-4 animate-spin" /> Logging in...</>) : "Log in"}
         </Button>
       </form>

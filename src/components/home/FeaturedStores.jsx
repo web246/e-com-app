@@ -31,19 +31,19 @@ export default function FeaturedStores() {
             {store.logo_url ? (
               <img src={store.logo_url} alt={store.name} className="w-14 h-14 rounded-2xl object-cover" />
             ) : (
-              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-[#005BB5] font-bold">
+              <div className="w-14 h-14 rounded-2xl bg-brown-light border border-[#D9D2CB]/70 flex items-center justify-center text-brand font-bold">
                 {store.name?.charAt(0)}
               </div>
             )}
             <div className="flex items-center gap-1">
-              <p className="font-display font-semibold text-sm text-[#0A0F1E]">{store.name}</p>
-              {store.verified && <BadgeCheck size={14} className="text-[#005BB5]" />}
+              <p className="font-display font-semibold text-sm text-brown">{store.name}</p>
+              {store.verified && <BadgeCheck size={14} className="text-brand" />}
             </div>
             <div className="flex items-center gap-1">
               <Star size={12} className="fill-amber-400 text-amber-400" />
-              <span className="text-xs text-slate-500">{store.rating} · {store.city || store.category}</span>
+              <span className="text-xs text-[#7a675a]">{store.rating} · {store.city || store.category}</span>
             </div>
-            <button className="text-xs font-semibold text-[#005BB5] border border-[#005BB5]/30 rounded-full px-3 py-1 mt-1 hover:bg-blue-50">
+            <button className="text-xs font-semibold text-brand border border-[#1E6ED8]/30 rounded-full px-3 py-1 mt-1 hover:bg-brown-light">
               View Store
             </button>
           </motion.div>

@@ -35,7 +35,7 @@ export default function FlashSale({ products = [] }) {
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {flashItems.map(p => (
-          <Link key={p.id} to={`/product/${p.id}`} className="bg-white rounded-2xl overflow-hidden">
+          <Link key={p.id} to={`/product/${p.id}`} className="bg-brown-light rounded-2xl overflow-hidden border border-[#D9D2CB]/40">
             <div className="aspect-square overflow-hidden">
               {p.thumbnail ? (
                 <img src={p.thumbnail} alt={p.name} className="w-full h-full object-cover" />
@@ -46,7 +46,7 @@ export default function FlashSale({ products = [] }) {
             <div className="p-2.5">
               <p className="price-display text-sm">{formatPrice(p.price, p.currency)}</p>
               {p.discount_percent > 0 && (
-                <p className="text-[10px] text-slate-500 mt-1">-{p.discount_percent}% off</p>
+                <p className="text-[10px] text-[#541B1B] mt-1">-{p.discount_percent}% off</p>
               )}
             </div>
           </Link>

@@ -2,11 +2,11 @@ import { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 const variants = {
-  default: 'gradient-primary text-white hover:opacity-95 shadow-sm',
-  outline: 'border border-slate-200 bg-white text-[#0A0F1E] hover:bg-slate-50',
-  ghost: 'text-[#0A0F1E] hover:bg-slate-100',
-  destructive: 'bg-red-500 text-white hover:bg-red-600',
-  accent: 'gradient-accent text-white hover:opacity-95',
+  default: 'bg-[#4A2A1A] text-white hover:bg-[#6D3F23] shadow-sm',
+  outline: 'border border-[#D9D2CB] bg-[#F7F3EF] text-[#421313] hover:bg-[#f2e9e0]',
+  ghost: 'text-[#421313] hover:bg-[#f2e9e0]',
+  destructive: 'bg-[#E54545] text-white hover:bg-[#c93c3c]',
+  accent: 'bg-[#391212] text-white hover:bg-[#4A2A1A]',
 };
 
 const sizes = {

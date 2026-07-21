@@ -17,7 +17,7 @@ export default function BottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pb-safe md:hidden">
-      <div className="glass rounded-2xl shadow-lg border border-white/30 px-2 py-2 max-w-md mx-auto flex items-center justify-between relative">
+      <div className="rounded-2xl shadow-lg border border-[#8B5E3B]/25 px-2 py-2 max-w-md mx-auto flex items-center justify-between relative bg-[#4A2A1A] text-[#F6EBDD]">
         {TABS.map(({ to, icon: Icon, label }) => {
           const active = to === '/' ? pathname === '/' : pathname.startsWith(to);
           return (
@@ -25,17 +25,17 @@ export default function BottomNav() {
               {active && (
                 <motion.div
                   layoutId="bottomnav-active"
-                  className="absolute -top-2 w-8 h-0.5 rounded-full bg-[#005BB5]"
+                  className="absolute -top-2 w-8 h-0.5 rounded-full bg-[#F6EBDD]"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
               <div className="relative">
-                <Icon size={20} strokeWidth={active ? 2.5 : 2} className={active ? 'text-[#005BB5]' : 'text-slate-400'} />
+                <Icon size={20} strokeWidth={active ? 2.5 : 2} className={active ? 'text-[#F6EBDD]' : 'text-[#C8A37B]'} />
                 {to === '/cart' && itemCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2 w-4 h-4 rounded-full gradient-primary text-white text-[9px] flex items-center justify-center font-bold">{itemCount}</span>
+                  <span className="absolute -top-1.5 -right-2 w-4 h-4 rounded-full bg-[#F6EBDD] text-[#4A2A1A] text-[9px] flex items-center justify-center font-bold">{itemCount}</span>
                 )}
               </div>
-              <span className={`text-[10px] font-medium ${active ? 'text-[#005BB5]' : 'text-slate-400'}`}>{label}</span>
+              <span className={`text-[10px] font-medium ${active ? 'text-[#F6EBDD]' : 'text-[#C8A37B]'}`}>{label}</span>
             </Link>
           );
         })}

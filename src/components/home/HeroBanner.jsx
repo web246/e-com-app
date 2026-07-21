@@ -22,14 +22,14 @@ export default function HeroBanner() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6 }}
           className="absolute inset-0"
-          style={{ background: `linear-gradient(135deg, ${banner.gradient_from}, ${banner.gradient_to})` }}
+          style={{ background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.3))' }}
         >
           <img src={banner.image_url} alt={banner.title} className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" />
           <div className="relative h-full flex flex-col justify-center px-6 sm:px-12">
-            <span className="inline-block w-fit text-xs font-bold text-white bg-white/20 px-3 py-1 rounded-full mb-3">{banner.badge_text}</span>
+            <span className="inline-block w-fit text-xs font-bold text-white bg-[rgba(255,255,255,0.12)] px-3 py-1 rounded-full mb-3">{banner.badge_text}</span>
             <h2 className="font-display font-bold text-2xl sm:text-4xl text-white mb-2 max-w-xs sm:max-w-md">{banner.title}</h2>
-            <p className="text-white/85 text-sm sm:text-base mb-4 max-w-xs">{banner.subtitle}</p>
-            <button className="w-fit bg-white text-[#0A0F1E] font-semibold text-sm px-5 py-2.5 rounded-xl hover:scale-105 transition-transform">
+            <p className="text-white/90 text-sm sm:text-base mb-4 max-w-xs">{banner.subtitle}</p>
+            <button className="w-fit bg-[#F6EBDD] text-[#4A2A1A] font-semibold text-sm px-5 py-2.5 rounded-xl hover:scale-105 transition-transform">
               Shop Now
             </button>
           </div>

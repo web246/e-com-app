@@ -21,8 +21,7 @@ import Wishlist from '@/pages/Wishlist';
 import Search from '@/pages/Search';
 import Categories from '@/pages/Categories';
 import Profile from '@/pages/Profile';
-import SellerDashboard from '@/pages/SellerDashboard';
-import AdminDashboard from '@/pages/AdminDashboard';
+// Seller and Admin dashboards removed from public routes (kept as pages for internal use)
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -38,8 +37,8 @@ const AuthenticatedApp = () => {
     return (
       <div className="fixed inset-0 flex items-center justify-center gradient-hero">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
-            <span className="text-[#005BB5] font-bold text-2xl font-display">D</span>
+          <div className="w-16 h-16 bg-[#F7F3EF] rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden p-2">
+            <img src="/src/assets/logo.png" alt="Dennis Mendez" className="w-full h-full object-contain" />
           </div>
           <div className="flex gap-1.5">
             {[...Array(3)].map((_, i) => (
@@ -73,10 +72,7 @@ const AuthenticatedApp = () => {
           <Route path="/categories" element={<Categories />} />
           <Route path="/categories/:slug" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/seller" element={<SellerDashboard />} />
-          <Route path="/seller/*" element={<SellerDashboard />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/*" element={<AdminDashboard />} />
+          {/* Seller and Admin routes intentionally removed from public routing */}
         </Route>
         <Route path="*" element={<Navigate to="/splash" replace />} />
       </Routes>
