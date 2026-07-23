@@ -6,7 +6,7 @@ export async function getCart() {
   return {
     items: (data.items || []).map(mapCartItem),
     subtotal: data.subtotal ?? 0,
-    currency: data.currency || 'KES',
+    currency: data.currency || 'KSH',
   };
 }
 
@@ -15,7 +15,7 @@ export async function addCartItem(product_id, quantity = 1) {
   return {
     items: (data.items || []).map(mapCartItem),
     subtotal: data.subtotal ?? 0,
-    currency: data.currency || 'KES',
+    currency: data.currency || 'KSH',
   };
 }
 
@@ -24,7 +24,7 @@ export async function updateCartItem(productId, quantity) {
   return {
     items: (data.items || []).map(mapCartItem),
     subtotal: data.subtotal ?? 0,
-    currency: data.currency || 'KES',
+    currency: data.currency || 'KSH',
   };
 }
 

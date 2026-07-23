@@ -41,7 +41,7 @@ export const DELIVERY_METHODS = [
   { id: 'pickup', name: 'Store Pickup', fee: 0, eta: 'Ready in 1 day' },
 ];
 
-export function formatPrice(amount, currency = 'KES') {
+export function formatPrice(amount, currency = 'KSH') {
   if (amount == null || isNaN(amount)) return `${currency} 0`;
   return `${currency} ${Number(amount).toLocaleString('en-KE')}`;
 }

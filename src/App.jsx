@@ -8,6 +8,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { CartProvider } from '@/lib/useCart';
 import { WishlistProvider } from '@/lib/useWishlist';
 import { ThemeProvider } from '@/lib/useTheme';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 import Splash from '@/pages/Splash';
 import Onboarding from '@/pages/Onboarding';
@@ -83,19 +84,21 @@ const AuthenticatedApp = () => {
 function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <ToastProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <Router>
-                <ScrollToTop />
-                <AuthenticatedApp />
-              </Router>
-              <Toaster />
-            </WishlistProvider>
-          </CartProvider>
-        </ToastProvider>
-      </AuthProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <ToastProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <Router>
+                  <ScrollToTop />
+                  <AuthenticatedApp />
+                </Router>
+                <Toaster />
+              </WishlistProvider>
+            </CartProvider>
+          </ToastProvider>
+        </AuthProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }

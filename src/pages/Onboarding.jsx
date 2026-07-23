@@ -1,22 +1,25 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Truck, ArrowRight, ChevronLeft } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import image1 from '@/assets/onboarding-1.png';
+import image2 from '@/assets/onboarding-2.png';
+import image3 from '@/assets/onboarding-3.png';
 
 const slides = [
   {
-    icon: ShoppingBag,
-    title: 'Shop Smarter',
-    description: 'Discover millions of products from trusted stores around the world — all in one place.',
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80',
-    accent: '#4A2A1A',
+    title: 'Straight to your door',
+    description: 'Ready to shop? Browse with easy filtering options and intuitive navigation.',
+    image: image1,
   },
   {
-    icon: Truck,
-    title: 'Fast & Secure Delivery',
-    description: 'Track every order in real time while enjoying secure, reliable shopping with M-Pesa payments.',
-    image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=600&q=80',
-    accent: '#6D3F23',
+    title: 'Level Up Your Style',
+    description: 'Shop smarter, dress bolder, and embrace your individuality to inspire every fashion moment.',
+    image: image2,
+  },
+  {
+    title: 'Build Your Wishlist',
+    description: 'Start building your dream wardrobe and save your favourite items to access them later.',
+    image: image3,
   },
 ];
 
@@ -26,24 +29,24 @@ export default function Onboarding() {
 
   const completeOnboarding = () => {
     localStorage.setItem('linet_onboarding_seen', 'true');
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   const next = () => {
-    if (current < slides.length - 1) setCurrent(c => c + 1);
-    else completeOnboarding();
+    if (current < slides.length - 1) {
+      setCurrent((value) => value + 1);
+    } else {
+      completeOnboarding();
+    }
   };
 
   const slide = slides[current];
-  const Icon = slide.icon;
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#FFF8F1_0%,#F6EBDD_100%)] flex flex-col">
       <div className="flex justify-between items-center p-6">
         {current > 0 ? (
-          <button onClick={() => setCurrent(c => c - 1)} className="flex items-center gap-2 text-[#6D3F23] font-medium text-sm">
-            <ChevronLeft size={16} /> Back
-          </button>
+          <button onClick={() => setCurrent(c => c - 1)} className="text-[#6D3F23] font-medium text-sm">Back</button>
         ) : <div />}
         <button onClick={completeOnboarding} className="text-[#7A4F2D] text-sm font-medium hover:text-[#4A2A1A]">Skip</button>
       </div>
@@ -51,24 +54,16 @@ export default function Onboarding() {
       <div className="flex-1 flex flex-col items-center justify-center px-8 pb-8">
         <AnimatePresence mode="wait">
           <motion.div
-            key={current}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 0.4 }}
+            key={slide.title}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.25 }}
             className="flex flex-col items-center text-center max-w-sm"
           >
             <div className="w-72 h-72 rounded-[2rem] overflow-hidden mb-10 shadow-[0_20px_60px_rgba(74,42,26,0.15)] relative border border-[#E6D1B6]">
               <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#2F1A0F]/30 to-transparent" />
-              <motion.div
-                className="absolute bottom-6 right-6 w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl"
-                style={{ background: slide.accent }}
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Icon size={24} className="text-white" />
-              </motion.div>
             </div>
 
             <h1 className="font-display font-bold text-4xl text-[#3F2415] mb-4">{slide.title}</h1>
@@ -83,11 +78,11 @@ export default function Onboarding() {
         </div>
 
         <button
+          type="button"
           onClick={next}
-          className="w-full max-w-sm py-4 flex items-center justify-center gap-2 text-lg rounded-2xl font-semibold text-white shadow-lg bg-[#4A2A1A] hover:bg-[#6D3F23] transition-all"
+          className="w-full max-w-sm py-4 text-lg rounded-2xl font-semibold text-white shadow-lg bg-[#4A2A1A] hover:bg-[#6D3F23] transition-all"
         >
           {current < slides.length - 1 ? 'Continue' : 'Get Started'}
-          <ArrowRight size={20} />
         </button>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { apiGet, apiPost } from './apiClient';
 import { setTokens, clearTokens } from './tokenStorage';
 import { mapUser, splitFullName } from '../mappers/userMapper';
-import { authenticateMockUser, seedMockUsers } from './mockAuth';
 
 export function shouldUseMockAuth(env = import.meta.env) {
   if (env.VITE_USE_MOCK_AUTH === 'false') return false;
@@ -9,15 +8,13 @@ export function shouldUseMockAuth(env = import.meta.env) {
 }
 
 export async function login(email, password) {
-  if (shouldUseMockAuth()) {
-    const data = authenticateMockUser(email, password);
-    setTokens(data.tokens);
-    seedMockUsers();
-    return { user: data.user, tokens: data.tokens };
-  }
-
   const data = await apiPost('/auth/login', { email, password }, { skipAuth: true });
-  setTokens(data);
+  // server may return tokens at top-level or under `tokens` key
+  if (data?.tokens) {
+    setTokens(data.tokens);
+  } else if (data?.access_token) {
+    setTokens(data);
+  }
   return { user: mapUser(data.user), tokens: data };
 }
 
@@ -31,6 +28,9 @@ export async function register({ email, password, full_name, phone }) {
     phone: phone || undefined,
     role: 'customer',
   }, { skipAuth: true });
+  // If server returned tokens on registration, persist them
+  if (data?.tokens) setTokens(data.tokens);
+  else if (data?.access_token) setTokens(data);
   return mapUser(data);
 }
 

@@ -60,6 +60,12 @@ export default function ProductCard({ product }) {
         <div className="p-3">
           <p className="text-[11px] text-[#8A5A35] mb-0.5">{product.store_name}</p>
           <h3 className="font-medium text-sm text-[#3F2415] line-clamp-2 leading-snug mb-1.5 min-h-[2.5em]">{product.name}</h3>
+          {product.category && (
+            <div className="text-xs text-[#7A4F2D] mb-1">{product.category}</div>
+          )}
+          {product.description && (
+            <p className="text-[12px] text-[#6B4A2E] line-clamp-2 mb-2">{product.description}</p>
+          )}
           <div className="flex items-center gap-1 mb-1.5">
             {product.rating > 0 && (
               <>
@@ -71,6 +77,10 @@ export default function ProductCard({ product }) {
           <div className="flex items-baseline gap-1.5">
             <span className="price-display text-sm">{formatPrice(product.price, product.currency)}</span>
             {product.old_price && <span className="text-xs text-[#9A7B5B] line-through">{formatPrice(product.old_price, product.currency)}</span>}
+          </div>
+          <div className="flex items-center gap-2 mt-2 text-xs text-[#6B4A2E]">
+            <span>{product.sold_count ? `${product.sold_count} sold` : '—'}</span>
+            <span className={product.stock > 0 ? 'text-green-600' : 'text-red-600'}>{product.stock > 0 ? 'In stock' : 'Out of stock'}</span>
           </div>
         </div>
       </Link>

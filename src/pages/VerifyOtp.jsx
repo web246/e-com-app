@@ -25,10 +25,22 @@ export default function VerifyOtp() {
     setLoading(true);
     try {
       await verifyOtp(email, otp);
+      // verification succeeded — attempt automatic login if password provided
       if (password) {
-        await login(email, password);
+        try {
+          await login(email, password);
+          navigate("/");
+          return;
+        } catch (loginErr) {
+          // show a clearer message: verification succeeded but automatic login failed
+          const msg = getErrorMessage(loginErr, 'Invalid email or password');
+          setError(`Verified, but automatic sign-in failed: ${msg}. Please log in manually.`);
+          setLoading(false);
+          return;
+        }
       }
-      navigate("/");
+      // no password supplied, just navigate to home or login
+      navigate('/');
     } catch (err) {
       setError(getErrorMessage(err, "Invalid or expired OTP"));
     } finally {

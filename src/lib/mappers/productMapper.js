@@ -17,7 +17,7 @@ export function mapProduct(p) {
     price,
     old_price: oldPrice,
     discount_percent: discountPercent,
-    currency: p.currency || 'KES',
+    currency: p.currency || 'KSH',
     thumbnail,
     images: images.length ? images : thumbnail ? [thumbnail] : [],
     store_name: p.vendor_name || '',
