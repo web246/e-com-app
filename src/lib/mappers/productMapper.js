@@ -1,4 +1,5 @@
 import { resolveImageUrl, resolveImageUrls } from '../resolveImageUrl';
+import { getCategoryName } from '../constants';
 
 export function mapProduct(p) {
   if (!p) return null;
@@ -17,13 +18,13 @@ export function mapProduct(p) {
     price,
     old_price: oldPrice,
     discount_percent: discountPercent,
-    currency: p.currency || 'KSH',
+    currency: 'KSH',
     thumbnail,
     images: images.length ? images : thumbnail ? [thumbnail] : [],
     store_name: p.vendor_name || '',
     vendor_slug: p.vendor_slug || '',
     store_id: p.vendor_slug,
-    category: p.category_slug || '',
+    category: getCategoryName(p.category_slug || p.category || ''),
     free_shipping: !!p.free_shipping,
     weight: p.weight || 0,
     length: p.length || 0,

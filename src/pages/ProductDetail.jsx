@@ -44,7 +44,7 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#EFF6FF] flex items-center justify-center">
+      <div className="min-h-screen bg-brown-light flex items-center justify-center">
         <p className="text-slate-500">Loading product...</p>
       </div>
     );
@@ -52,7 +52,7 @@ export default function ProductDetail() {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-[#EFF6FF] flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-brown-light flex flex-col items-center justify-center gap-4">
         <p className="text-slate-500">{error || 'Product not found'}</p>
         <button onClick={() => navigate('/')} className="btn-primary px-6 py-2">Back to home</button>
       </div>
@@ -81,7 +81,7 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
+    <div className="min-h-screen bg-brown-light">
       <TopBar />
       <PageTransition>
       <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 md:pb-16">
@@ -95,13 +95,13 @@ export default function ProductDetail() {
               {images[activeImg] ? (
                 <img src={images[activeImg]} alt={product.name} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-blue-50" />
+                <div className="w-full h-full bg-brown-light" />
               )}
             </div>
             {images.length > 1 && (
               <div className="flex gap-2">
                 {images.map((img, i) => (
-                  <button key={i} onClick={() => setActiveImg(i)} className={`w-16 h-16 rounded-xl overflow-hidden border-2 ${activeImg === i ? 'border-[#005BB5]' : 'border-transparent'}`}>
+                  <button key={i} onClick={() => setActiveImg(i)} className={`w-16 h-16 rounded-xl overflow-hidden border-2 ${activeImg === i ? 'border-brand' : 'border-transparent'}`}>
                     <img src={img} alt="" className="w-full h-full object-cover" />
                   </button>
                 ))}
@@ -110,7 +110,7 @@ export default function ProductDetail() {
           </div>
 
           <div>
-            <p className="text-sm text-[#005BB5] font-semibold mb-1">{product.store_name}</p>
+            <p className="text-sm text-brand font-semibold mb-1">{product.store_name}</p>
             <h1 className="font-display font-bold text-2xl sm:text-3xl text-[#0A0F1E] mb-3">{product.name}</h1>
             <div className="flex items-center gap-2 mb-4">
               <div className="flex items-center gap-1">
@@ -148,15 +148,15 @@ export default function ProductDetail() {
 
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="linet-card p-3">
-                <Truck size={18} className="mx-auto mb-1 text-[#005BB5]" />
+                <Truck size={18} className="mx-auto mb-1 text-brand" />
                 <p className="text-[11px] text-slate-500">Fast Delivery</p>
               </div>
               <div className="linet-card p-3">
-                <ShieldCheck size={18} className="mx-auto mb-1 text-[#005BB5]" />
+                <ShieldCheck size={18} className="mx-auto mb-1 text-brand" />
                 <p className="text-[11px] text-slate-500">Secure Payment</p>
               </div>
               <div className="linet-card p-3">
-                <RotateCcw size={18} className="mx-auto mb-1 text-[#005BB5]" />
+                <RotateCcw size={18} className="mx-auto mb-1 text-brand" />
                 <p className="text-[11px] text-slate-500">Easy Returns</p>
               </div>
             </div>
@@ -169,7 +169,7 @@ export default function ProductDetail() {
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`pb-3 text-sm font-semibold capitalize border-b-2 transition-colors ${tab === t ? 'border-[#005BB5] text-[#005BB5]' : 'border-transparent text-slate-400'}`}
+                className={`pb-3 text-sm font-semibold capitalize border-b-2 transition-colors ${tab === t ? 'border-brand text-brand' : 'border-transparent text-slate-400'}`}
               >
                 {t}
               </button>

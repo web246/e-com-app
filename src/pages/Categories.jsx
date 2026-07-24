@@ -22,7 +22,7 @@ export default function Categories() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
+    <div className="min-h-screen bg-brown-light">
       <TopBar />
       <PageTransition>
       <div className="max-w-5xl mx-auto px-4 pt-24 pb-32 md:pb-16">

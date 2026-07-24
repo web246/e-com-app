@@ -2,29 +2,54 @@ const IMG = (seed, w = 600) => `https://images.unsplash.com/${seed}?w=${w}&q=80`
 
 /** Static icon/color metadata for category slugs (API categories may not include these). */
 export const CATEGORY_META = {
-  electronics: { icon: 'Cpu', color: '#005BB5' },
-  fashion: { icon: 'Shirt', color: '#E67A00' },
-  phones: { icon: 'Smartphone', color: '#6366F1' },
-  computers: { icon: 'Monitor', color: '#6366F1' },
-  home: { icon: 'Sofa', color: '#22C55E' },
-  gaming: { icon: 'Gamepad2', color: '#EC4899' },
-  beauty: { icon: 'Sparkles', color: '#8B5CF6' },
-  footwear: { icon: 'Footprints', color: '#E67A00' },
-  groceries: { icon: 'ShoppingBasket', color: '#22C55E' },
-  food: { icon: 'UtensilsCrossed', color: '#EF4444' },
-  automotive: { icon: 'Car', color: '#64748B' },
-  health: { icon: 'Heart', color: '#EF4444' },
-  sports: { icon: 'Dumbbell', color: '#06B6D4' },
-  more: { icon: 'Grid3X3', color: '#64748B' },
+  electronics: { icon: 'Cpu', color: '#A15B2A', name: 'Electronics' },
+  fashion: { icon: 'Shirt', color: '#6D3F23', name: 'Fashion' },
+  phones: { icon: 'Smartphone', color: '#8B5CF6', name: 'Phones' },
+  computers: { icon: 'Monitor', color: '#A15B2A', name: 'Computers' },
+  home: { icon: 'Sofa', color: '#22C55E', name: 'Home' },
+  gaming: { icon: 'Gamepad2', color: '#F97316', name: 'Gaming' },
+  beauty: { icon: 'Sparkles', color: '#DA212A', name: 'Beauty' },
+  footwear: { icon: 'Footprints', color: '#A15B2A', name: 'Footwear' },
+  groceries: { icon: 'ShoppingBasket', color: '#22C55E', name: 'Groceries' },
+  food: { icon: 'UtensilsCrossed', color: '#EF4444', name: 'Food' },
+  automotive: { icon: 'Car', color: '#64748B', name: 'Automotive' },
+  health: { icon: 'Heart', color: '#DA212A', name: 'Health' },
+  sports: { icon: 'Dumbbell', color: '#06B6D4', name: 'Sports' },
+  more: { icon: 'Grid3X3', color: '#6D3F23', name: 'More' },
 };
 
+export const DEFAULT_CATEGORIES = [
+  { id: 1, slug: 'electronics', name: 'Electronics', description: 'Premium gadgets, accessories and tech essentials', image_url: '', parent_id: null },
+  { id: 2, slug: 'fashion', name: 'Fashion', description: 'Curated clothing, shoes, and premium style pieces', image_url: '', parent_id: null },
+  { id: 3, slug: 'phones', name: 'Phones', description: 'Latest smartphones and mobile accessories', image_url: '', parent_id: null },
+  { id: 4, slug: 'computers', name: 'Computers', description: 'Laptops, desktops, and performance gear', image_url: '', parent_id: null },
+  { id: 5, slug: 'home', name: 'Home', description: 'Elevated furniture, decor and home essentials', image_url: '', parent_id: null },
+  { id: 6, slug: 'gaming', name: 'Gaming', description: 'Gaming consoles, controllers, and high-performance gear', image_url: '', parent_id: null },
+  { id: 7, slug: 'beauty', name: 'Beauty', description: 'Personal care, fragrance and wellness favorites', image_url: '', parent_id: null },
+  { id: 8, slug: 'groceries', name: 'Groceries', description: 'Daily essentials, pantry staples and premium foods', image_url: '', parent_id: null },
+];
+
+export function getCategoryName(slug) {
+  if (!slug) return '';
+  return String(slug)
+    .replace(/[-_]/g, ' ')
+    .split(' ')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
 export function enrichCategory(cat) {
-  const meta = CATEGORY_META[cat.slug] || { icon: 'Grid3X3', color: '#64748B' };
-  return { ...cat, icon: meta.icon, color: meta.color };
+  const meta = CATEGORY_META[cat.slug] || { icon: 'Grid3X3', color: '#64748B', name: getCategoryName(cat.slug) };
+  return {
+    ...cat,
+    icon: meta.icon,
+    color: meta.color,
+    name: cat.name || meta.name || getCategoryName(cat.slug),
+  };
 }
 
 export const BANNERS = [
-  { title: 'Mega Electronics Sale', subtitle: 'Up to 40% off top gadgets', badge_text: 'Limited Time', image_url: IMG('photo-1607082349566-187342175e2f', 900), gradient_from: '#005BB5', gradient_to: '#003D8F' },
+  { title: 'Mega Electronics Sale', subtitle: 'Up to 40% off top gadgets', badge_text: 'Limited Time', image_url: IMG('photo-1607082349566-187342175e2f', 900), gradient_from: '#A15B2A', gradient_to: '#6D3F23' },
   { title: 'Fashion Week Drop', subtitle: 'New arrivals every day', badge_text: 'Just Landed', image_url: IMG('photo-1441986300917-64674bd600d8', 900), gradient_from: '#E67A00', gradient_to: '#C45F00' },
   { title: 'Home Essentials', subtitle: 'Furnish your space for less', badge_text: 'Best Value', image_url: IMG('photo-1567016432779-094069958ea5', 900), gradient_from: '#22C55E', gradient_to: '#0F9D58' },
 ];
@@ -42,6 +67,8 @@ export const DELIVERY_METHODS = [
 ];
 
 export function formatPrice(amount, currency = 'KSH') {
-  if (amount == null || isNaN(amount)) return `${currency} 0`;
-  return `${currency} ${Number(amount).toLocaleString('en-KE')}`;
+  if (amount == null || isNaN(amount)) return `KSH 0`;
+  const normalizedCurrency = String(currency || 'KSH').toUpperCase();
+  const displayCurrency = normalizedCurrency === 'DBP' || normalizedCurrency === 'KES' ? 'KSH' : normalizedCurrency;
+  return `${displayCurrency} ${Number(amount).toLocaleString('en-KE')}`;
 }

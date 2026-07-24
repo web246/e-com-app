@@ -10,7 +10,7 @@ export async function payOrder({ order_id, method, amount, currency }) {
     order_id,
     method,
     amount,
-    currency: currency || 'KES',
+    currency: currency || 'KSH',
   });
 }
 

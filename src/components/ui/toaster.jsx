@@ -21,7 +21,7 @@ export function Toaster() {
           >
             {t.variant === 'destructive'
               ? <XCircle size={18} className="text-red-500 mt-0.5 flex-shrink-0" />
-              : <CheckCircle2 size={18} className="text-[#005BB5] mt-0.5 flex-shrink-0" />}
+              : <CheckCircle2 size={18} className="text-[#4A2A1A] mt-0.5 flex-shrink-0" />}
             <div>
               {t.title && <p className="font-semibold text-sm text-[#0A0F1E]">{t.title}</p>}
               {t.description && <p className="text-xs text-slate-500 mt-0.5">{t.description}</p>}

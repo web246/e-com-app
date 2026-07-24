@@ -31,56 +31,57 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <motion.div whileHover={{ y: -4 }} className="linet-card overflow-hidden hydro-shadow-hover group border border-[#8B5E3B]/25">
+    <motion.div whileHover={{ y: -2 }} className="linet-card overflow-hidden hydro-shadow-hover group border border-[#D9B48A]/40">
       <Link to={`/product/${product.id}`} className="block">
-        <div className="relative aspect-square bg-[#F6EBDD] overflow-hidden">
+        <div className="relative aspect-square bg-brown-light overflow-hidden">
           {product.thumbnail ? (
             <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-[#7A4F2D] text-sm">No image</div>
           )}
-          <div className="absolute top-2 left-2 flex flex-col gap-1">
-            {product.discount_percent > 0 && (
-              <span className="bg-[#A15B2A] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">-{product.discount_percent}%</span>
-            )}
-            {product.is_best_seller && (
-              <span className="bg-brand text-white text-[10px] font-bold px-2 py-0.5 rounded-full">🏆 Best Seller</span>
-            )}
-            {product.is_new_arrival && (
-              <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">New</span>
-            )}
+          <div className="absolute inset-x-2 top-2 flex items-center justify-between gap-2">
+            <div className="flex flex-wrap gap-1">
+              {product.discount_percent > 0 && (
+                <span className="badge-pill bg-[#A15B2A]/10 text-[#A15B2A]">-{product.discount_percent}%</span>
+              )}
+              {product.is_best_seller && (
+                <span className="badge-pill bg-[#DA212A]/10 text-[#DA212A]">Best Seller</span>
+              )}
+            </div>
+            <button onClick={handleWishlist} className="w-9 h-9 rounded-full bg-white/95 flex items-center justify-center shadow-sm border border-[#D9B48A]/30">
+              <Heart size={15} className={wishlisted ? 'fill-[#A15B2A] text-[#A15B2A]' : 'text-[#5E3A25]'} />
+            </button>
           </div>
-          <button onClick={handleWishlist} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#F7F3EF]/95 flex items-center justify-center shadow-sm">
-            <Heart size={15} className={wishlisted ? 'fill-[#A15B2A] text-[#A15B2A]' : 'text-brown'} />
-          </button>
-          <button onClick={handleAdd} className="absolute bottom-2 right-2 w-8 h-8 rounded-full gradient-primary flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
-            <Plus size={16} className="text-white" />
+          <button onClick={handleAdd} className="absolute bottom-3 right-3 w-10 h-10 rounded-full gradient-primary flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+            <Plus size={18} className="text-white" />
           </button>
         </div>
-        <div className="p-3">
-          <p className="text-[11px] text-[#8A5A35] mb-0.5">{product.store_name}</p>
-          <h3 className="font-medium text-sm text-[#3F2415] line-clamp-2 leading-snug mb-1.5 min-h-[2.5em]">{product.name}</h3>
-          {product.category && (
-            <div className="text-xs text-[#7A4F2D] mb-1">{product.category}</div>
-          )}
-          {product.description && (
-            <p className="text-[12px] text-[#6B4A2E] line-clamp-2 mb-2">{product.description}</p>
-          )}
-          <div className="flex items-center gap-1 mb-1.5">
-            {product.rating > 0 && (
-              <>
-                <Star size={11} className="fill-amber-400 text-amber-400" />
-                <span className="text-[11px] text-[#7A4F2D]">{product.rating}</span>
-              </>
-            )}
+        <div className="p-4 space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6F5745]">{product.category || 'General'}</p>
+            <span className={`product-label ${product.free_shipping ? 'bg-[#22C55E]/12 text-[#166534]' : 'bg-[#E4C9A6]/20 text-[#6F4E2A]'}`}>
+              {product.free_shipping ? 'Free Shipping' : product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+            </span>
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="price-display text-sm">{formatPrice(product.price, product.currency)}</span>
-            {product.old_price && <span className="text-xs text-[#9A7B5B] line-through">{formatPrice(product.old_price, product.currency)}</span>}
+          <div>
+            <h3 className="font-display font-semibold text-base text-[#2F241E] line-clamp-2 leading-tight">{product.name}</h3>
+            <p className="text-xs text-[#7A4F2D] mt-2 line-clamp-2">{product.description || 'Premium quality product with strong customer appeal.'}</p>
           </div>
-          <div className="flex items-center gap-2 mt-2 text-xs text-[#6B4A2E]">
-            <span>{product.sold_count ? `${product.sold_count} sold` : '—'}</span>
-            <span className={product.stock > 0 ? 'text-green-600' : 'text-red-600'}>{product.stock > 0 ? 'In stock' : 'Out of stock'}</span>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-1 mb-1">
+                <Star size={12} className="fill-[#F59E0B] text-[#F59E0B]" />
+                <span className="text-xs font-semibold text-[#6F4E2A]">{product.rating > 0 ? product.rating.toFixed(1) : '4.5'}</span>
+              </div>
+              <div className="flex items-center gap-2 text-[13px] text-[#6F4E2A]">
+                <span className="price-display">{formatPrice(product.price, product.currency)}</span>
+                {product.old_price && <span className="text-xs text-[#9A7B5B] line-through">{formatPrice(product.old_price, product.currency)}</span>}
+              </div>
+            </div>
+            <div className="text-right text-[11px] text-[#7A4F2D]">
+              <div>{product.sold_count ? `${product.sold_count} sold` : 'Popular item'}</div>
+              <div className={product.stock > 0 ? 'text-[#166534]' : 'text-[#991B1B]'}>{product.stock > 0 ? 'Available now' : 'Out of stock'}</div>
+            </div>
           </div>
         </div>
       </Link>

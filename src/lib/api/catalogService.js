@@ -1,5 +1,6 @@
 import { apiGetPublic } from './apiClient';
 import { mapCategory, mapProduct, mapStore } from '../mappers/productMapper';
+import { DEFAULT_CATEGORIES } from '../constants';
 
 function buildQuery(params) {
   const q = new URLSearchParams();
@@ -26,7 +27,7 @@ export async function fetchProduct(id) {
 export async function fetchCategories(parent_id) {
   const data = await apiGetPublic(`/public/categories${buildQuery({ parent_id })}`);
   const list = Array.isArray(data) ? data : data.items || [];
-  return list.map(mapCategory);
+  return list.length ? list.map(mapCategory) : DEFAULT_CATEGORIES.map(mapCategory);
 }
 
 export async function fetchStores({ page = 1, page_size = 20 } = {}) {

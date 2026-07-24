@@ -85,14 +85,14 @@ export default function Search() {
   };
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
+    <div className="min-h-screen bg-brown-light">
       <TopBar />
       <PageTransition>
       <PullToRefresh onRefresh={loadProducts}>
       <div className="max-w-7xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <div className="mb-6">
           <h1 className="font-display font-bold text-2xl text-[#0A0F1E]">
-            {query ? <>Results for <span className="text-[#005BB5]">"{query}"</span></> : 'All Products'}
+            {query ? <>Results for <span className="text-brand">"{query}"</span></> : 'All Products'}
           </h1>
           <p className="text-slate-500 text-sm mt-1">{loading ? 'Searching...' : `${products.length} products found`}</p>
         </div>
@@ -112,7 +112,7 @@ export default function Search() {
                     <button
                       key={cat.slug || cat.id}
                       onClick={() => selectCategory(cat)}
-                      className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-colors ${selectedCategory === cat.slug ? 'bg-blue-50 text-[#005BB5] font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}
+                      className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-colors ${selectedCategory === cat.slug ? 'bg-brown-light text-brand font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}
                     >
                       {cat.name}
                     </button>
@@ -122,7 +122,7 @@ export default function Search() {
               <div className="mb-5">
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Shipping</h4>
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <div onClick={() => setFreeShippingOnly(v => !v)} className={`w-10 h-5 rounded-full transition-colors ${freeShippingOnly ? 'bg-[#005BB5]' : 'bg-slate-200'} relative`}>
+                  <div onClick={() => setFreeShippingOnly(v => !v)} className={`w-10 h-5 rounded-full transition-colors ${freeShippingOnly ? 'bg-brand' : 'bg-slate-200'} relative`}>
                     <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${freeShippingOnly ? 'translate-x-5' : ''}`} />
                   </div>
                   <span className="text-sm text-slate-600">Free Shipping</span>
@@ -143,7 +143,7 @@ export default function Search() {
                   <button
                     key={cat.slug || cat.id}
                     onClick={() => selectCategory(cat)}
-                    className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${selectedCategory === cat.slug ? 'bg-[#005BB5] text-white border-[#005BB5]' : 'bg-white text-slate-600 border-slate-200'}`}
+                    className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${selectedCategory === cat.slug ? 'bg-brand text-white border-brand' : 'bg-white text-slate-600 border-slate-200'}`}
                   >
                     {cat.name}
                   </button>

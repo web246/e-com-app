@@ -34,7 +34,7 @@ export default function PullToRefresh({ onRefresh, children }) {
     <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
       {(pulling || refreshing) && (
         <div className="flex justify-center py-2" style={{ height: refreshing ? 40 : distance }}>
-          <RefreshCw size={20} className={`text-[#005BB5] ${refreshing ? 'animate-spin' : ''}`} />
+          <RefreshCw size={20} className={`text-brand ${refreshing ? 'animate-spin' : ''}`} />
         </div>
       )}
       {children}

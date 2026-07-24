@@ -10,7 +10,7 @@ export default function Wishlist() {
   const { items } = useWishlist();
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
+    <div className="min-h-screen bg-brown-light">
       <TopBar />
       <PageTransition>
       <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 md:pb-16">
@@ -18,8 +18,8 @@ export default function Wishlist() {
 
         {items.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-6">
-              <Heart size={40} className="text-[#005BB5]" />
+            <div className="w-24 h-24 rounded-full bg-brown-light flex items-center justify-center mx-auto mb-6">
+              <Heart size={40} className="text-brand" />
             </div>
             <h2 className="font-display font-bold text-xl text-[#0A0F1E] mb-2">Your wishlist is empty</h2>
             <p className="text-slate-500 mb-6">Save items you love to find them here later.</p>

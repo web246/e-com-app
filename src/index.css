@@ -109,21 +109,56 @@
   .text-on-brown { color: var(--on-brown) !important; }
   .glass-on-brown { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); }
 
-  .linet-card {
-    @apply rounded-2xl transition-all duration-300 border bg-[#FFF8F1];
-    border-color: rgba(74, 42, 26, 0.16);
+  .linet-card,
+  .card-surface {
+    @apply rounded-[1.75rem] transition-all duration-300 border bg-[#FFF8F1];
+    border-color: rgba(217, 210, 186, 0.65);
     color: #3F2415;
-    box-shadow: 0 12px 30px rgba(57, 18, 18, 0.08);
+    box-shadow: 0 16px 35px rgba(57, 18, 18, 0.09);
   }
-  .linet-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 40px rgba(57, 18, 18, 0.14);
+  .linet-card:hover,
+  .card-surface:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 22px 45px rgba(57, 18, 18, 0.14);
+    border-color: rgba(109, 63, 35, 0.24);
   }
 
   .btn-primary {
-    @apply text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200;
+    @apply text-white font-semibold rounded-2xl transition-all duration-200;
     background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
     font-family: 'Plus Jakarta Sans', sans-serif;
+    padding: 0.9rem 1.7rem;
+    box-shadow: 0 12px 25px rgba(109, 63, 35, 0.18);
+  }
+
+  .btn-secondary {
+    @apply text-[#4A2A1A] bg-white border border-[#D9B48A]/80 font-semibold rounded-2xl transition-all duration-200;
+    padding: 0.9rem 1.6rem;
+  }
+  .btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(109, 63, 35, 0.12);
+  }
+
+  .badge-pill {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em];
+    background: rgba(109, 63, 35, 0.08);
+    color: var(--color-brown);
+  }
+
+  .product-label {
+    @apply rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide;
+    background: rgba(109, 63, 35, 0.08);
+    color: #4A2A1A;
+  }
+
+  .text-brand-dark { color: var(--color-brown) !important; }
+
+  .price-display {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-primary);
+    font-weight: 700;
   }
   .btn-primary:hover {
     transform: translateY(-1px);

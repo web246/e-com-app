@@ -53,7 +53,7 @@ export default function Cart() {
 
   if (loading && items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#EFF6FF] flex items-center justify-center">
+      <div className="min-h-screen bg-brown-light flex items-center justify-center">
         <p className="text-slate-500">Loading cart...</p>
       </div>
     );
@@ -61,12 +61,12 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#EFF6FF]">
+      <div className="min-h-screen bg-brown-light">
         <TopBar />
         <PageTransition>
         <div className="max-w-xl mx-auto px-4 pt-32 pb-32 text-center">
-          <div className="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-6">
-            <ShoppingBag size={40} className="text-[#005BB5]" />
+          <div className="w-24 h-24 rounded-full bg-brown-light flex items-center justify-center mx-auto mb-6">
+            <ShoppingBag size={40} className="text-brand" />
           </div>
           <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-2">Your cart is empty</h1>
           <p className="text-slate-500 mb-6">Looks like you haven't added anything yet.</p>
@@ -79,7 +79,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
+    <div className="min-h-screen bg-brown-light">
       <TopBar />
       <PageTransition>
       <div className="max-w-5xl mx-auto px-4 pt-24 pb-32 md:pb-16">
@@ -94,7 +94,7 @@ export default function Cart() {
                 animate={{ opacity: 1, x: 0 }}
                 className="linet-card p-3 flex gap-3 items-center"
               >
-                <Link to={`/product/${product.id}`} className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-blue-50">
+                <Link to={`/product/${product.id}`} className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-brown-light">
                   {product.thumbnail && <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover" />}
                 </Link>
                 <div className="flex-1 min-w-0">
@@ -126,10 +126,10 @@ export default function Cart() {
                   value={couponInput}
                   onChange={e => setCouponInput(e.target.value)}
                   placeholder="Coupon code"
-                  className="w-full pl-8 pr-2 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:border-[#005BB5]"
+                  className="w-full pl-8 pr-2 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:border-brand"
                 />
               </div>
-              <button onClick={handleApplyCoupon} disabled={applying} className="px-4 py-2 text-sm font-semibold text-[#005BB5] border border-[#005BB5]/30 rounded-xl hover:bg-blue-50 disabled:opacity-50">
+              <button onClick={handleApplyCoupon} disabled={applying} className="px-4 py-2 text-sm font-semibold text-brand border border-brand/30 rounded-xl hover:bg-brown-light disabled:opacity-50">
                 {applying ? '...' : 'Apply'}
               </button>
             </div>

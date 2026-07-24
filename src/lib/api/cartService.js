@@ -33,6 +33,6 @@ export async function removeCartItem(productId) {
   return {
     items: (data.items || []).map(mapCartItem),
     subtotal: data.subtotal ?? 0,
-    currency: data.currency || 'KES',
+    currency: data.currency || 'KSH',
   };
 }

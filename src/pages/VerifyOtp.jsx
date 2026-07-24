@@ -69,7 +69,7 @@ export default function VerifyOtp() {
       footer={
         <>
           Already verified?{" "}
-          <Link to="/login" className="text-[#005BB5] font-semibold hover:underline">
+          <Link to="/login" className="text-brand font-semibold hover:underline">
             Log in
           </Link>
         </>
@@ -108,7 +108,7 @@ export default function VerifyOtp() {
         type="button"
         onClick={handleResend}
         disabled={resending}
-        className="w-full mt-4 text-sm text-[#005BB5] font-semibold hover:underline disabled:opacity-50"
+        className="w-full mt-4 text-sm text-brand font-semibold hover:underline disabled:opacity-50"
       >
         {resending ? "Sending..." : "Resend code"}
       </button>

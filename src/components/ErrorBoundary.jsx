@@ -30,7 +30,7 @@ export default class ErrorBoundary extends React.Component {
             <pre className="whitespace-pre-wrap text-xs mt-2">{String(error)}{info?.componentStack}</pre>
           </details>
           <div className="mt-4 flex justify-center gap-2">
-            <button onClick={() => window.location.reload()} className="px-4 py-2 rounded bg-[#005BB5] text-white">Reload</button>
+            <button onClick={() => window.location.reload()} className="px-4 py-2 rounded bg-brand text-white">Reload</button>
           </div>
         </div>
       </div>

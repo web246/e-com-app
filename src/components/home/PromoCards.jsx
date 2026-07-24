@@ -3,8 +3,8 @@ import { Zap, Gift, Truck, Tag } from 'lucide-react';
 
 const PROMOS = [
   { icon: Zap, title: 'Flash Deals', subtitle: 'Up to 50% off', color: '#E67A00' },
-  { icon: Gift, title: 'New User Gift', subtitle: 'KES 500 voucher', color: '#8B5CF6' },
-  { icon: Truck, title: 'Free Shipping', subtitle: 'Orders over KES 2,000', color: '#22C55E' },
+  { icon: Gift, title: 'New User Gift', subtitle: 'KSH 500 voucher', color: '#8B5CF6' },
+  { icon: Truck, title: 'Free Shipping', subtitle: 'Orders over KSH 2,000', color: '#22C55E' },
   { icon: Tag, title: 'Clearance', subtitle: 'Final markdowns', color: '#EF4444' },
 ];
 

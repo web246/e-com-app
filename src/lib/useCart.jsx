@@ -9,14 +9,14 @@ export function CartProvider({ children }) {
   const { isAuthenticated } = useAuth();
   const [items, setItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
-  const [currency, setCurrency] = useState('KES');
+  const [currency, setCurrency] = useState('KSH');
   const [coupon, setCoupon] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const applyCartResponse = (data) => {
     setItems(data.items || []);
     setSubtotal(data.subtotal ?? 0);
-    setCurrency(data.currency || 'KES');
+    setCurrency(data.currency || 'KSH');
   };
 
   const reload = useCallback(async () => {

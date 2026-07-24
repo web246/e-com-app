@@ -23,7 +23,7 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
+    <div className="min-h-screen bg-brown-light">
       <TopBar />
       <PageTransition>
       <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 md:pb-16">
@@ -36,7 +36,7 @@ export default function AdminDashboard() {
                 <button
                   key={n.id}
                   onClick={() => setTab(n.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${tab === n.id ? 'bg-blue-50 text-[#005BB5]' : 'text-slate-500 hover:bg-slate-50'}`}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${tab === n.id ? 'bg-brown-light text-brand' : 'text-slate-500 hover:bg-slate-50'}`}
                 >
                   <n.icon size={16} /> {n.label}
                 </button>
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
           <div className="flex-1 min-w-0">
             <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-5 md:hidden">
               {NAV.map(n => (
-                <button key={n.id} onClick={() => setTab(n.id)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${tab === n.id ? 'bg-[#005BB5] text-white border-[#005BB5]' : 'bg-white text-slate-600 border-slate-200'}`}>
+                <button key={n.id} onClick={() => setTab(n.id)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${tab === n.id ? 'bg-brand text-white border-brand' : 'bg-white text-slate-600 border-slate-200'}`}>
                   {n.label}
                 </button>
               ))}
@@ -78,7 +78,7 @@ export default function AdminDashboard() {
                       {s.logo_url ? (
                         <img src={s.logo_url} className="w-11 h-11 rounded-xl object-cover" alt="" />
                       ) : (
-                        <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-[#005BB5] font-bold">{s.name?.charAt(0)}</div>
+                        <div className="w-11 h-11 rounded-xl bg-brown-light flex items-center justify-center text-brand font-bold">{s.name?.charAt(0)}</div>
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-[#0A0F1E]">{s.name}</p>

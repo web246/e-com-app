@@ -51,7 +51,7 @@ export default function ResetPassword() {
       title="Set new password"
       subtitle="Choose a strong password for your account"
       footer={
-        <Link to="/login" className="text-[#005BB5] font-semibold hover:underline">
+        <Link to="/login" className="text-brand font-semibold hover:underline">
           Back to log in
         </Link>
       }

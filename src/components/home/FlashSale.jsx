@@ -28,7 +28,7 @@ export default function FlashSale({ products = [] }) {
           <Zap size={22} className="text-white fill-white" />
           <h2 className="font-display font-bold text-xl sm:text-2xl text-white">Flash Sale</h2>
         </div>
-        <div className="flex items-center gap-1 text-white font-mono font-bold text-sm bg-black/20 rounded-full px-3 py-1.5">
+        <div className="flex items-center gap-1 text-white font-mono font-bold text-sm bg-[#4A2A1A]/80 rounded-full px-3 py-1.5">
           <span>{h}</span>:<span>{m}</span>:<span>{s}</span>
         </div>
       </div>

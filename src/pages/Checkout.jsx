@@ -75,7 +75,7 @@ export default function Checkout() {
         order_id: order.id,
         method: payment,
         amount: total,
-        currency: order.currency || 'KES',
+        currency: order.currency || 'KSH',
       });
       await clearCart();
       navigate('/order-success', {
@@ -99,7 +99,7 @@ export default function Checkout() {
   };
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
+    <div className="min-h-screen bg-brown-light">
       <TopBar />
       <PageTransition>
       <div className="max-w-3xl mx-auto px-4 pt-24 pb-32 md:pb-16">
@@ -116,9 +116,9 @@ export default function Checkout() {
                 <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${step >= s.id ? 'gradient-primary text-white' : 'bg-slate-200 text-slate-400'}`}>
                   {step > s.id ? <Check size={16} /> : <s.icon size={15} />}
                 </div>
-                <span className={`text-[10px] font-medium ${step >= s.id ? 'text-[#005BB5]' : 'text-slate-400'}`}>{s.label}</span>
+                <span className={`text-[10px] font-medium ${step >= s.id ? 'text-brand' : 'text-slate-400'}`}>{s.label}</span>
               </div>
-              {i < STEPS.length - 1 && <div className={`h-0.5 flex-1 mx-1 rounded-full ${step > s.id ? 'bg-[#005BB5]' : 'bg-slate-200'}`} />}
+              {i < STEPS.length - 1 && <div className={`h-0.5 flex-1 mx-1 rounded-full ${step > s.id ? 'bg-brand' : 'bg-slate-200'}`} />}
             </div>
           ))}
         </div>
@@ -143,12 +143,12 @@ export default function Checkout() {
               <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-3">
                 <h2 className="font-display font-bold text-lg text-[#0A0F1E] mb-2">Delivery Method</h2>
                 {DELIVERY_METHODS.map(d => (
-                  <button key={d.id} onClick={() => setDelivery(d.id)} className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-colors ${delivery === d.id ? 'border-[#005BB5] bg-blue-50' : 'border-slate-200'}`}>
+                  <button key={d.id} onClick={() => setDelivery(d.id)} className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-colors ${delivery === d.id ? 'border-brand bg-brown-light' : 'border-slate-200'}`}>
                     <div>
                       <p className="font-semibold text-sm text-[#0A0F1E]">{d.name}</p>
                       <p className="text-xs text-slate-500">{d.eta}</p>
                     </div>
-                    <span className="font-bold text-sm text-[#005BB5]">{d.fee === 0 ? 'Free' : formatPrice(d.fee)}</span>
+                    <span className="font-bold text-sm text-brand">{d.fee === 0 ? 'Free' : formatPrice(d.fee)}</span>
                   </button>
                 ))}
               </motion.div>
@@ -158,12 +158,12 @@ export default function Checkout() {
               <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-3">
                 <h2 className="font-display font-bold text-lg text-[#0A0F1E] mb-2">Payment Method</h2>
                 {PAYMENT_METHODS.map(p => (
-                  <button key={p.id} onClick={() => setPayment(p.id)} className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-colors ${payment === p.id ? 'border-[#005BB5] bg-blue-50' : 'border-slate-200'}`}>
+                  <button key={p.id} onClick={() => setPayment(p.id)} className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-colors ${payment === p.id ? 'border-brand bg-brown-light' : 'border-slate-200'}`}>
                     <div>
                       <p className="font-semibold text-sm text-[#0A0F1E]">{p.name}</p>
                       <p className="text-xs text-slate-500">{p.description}</p>
                     </div>
-                    {payment === p.id && <Check size={18} className="text-[#005BB5]" />}
+                    {payment === p.id && <Check size={18} className="text-brand" />}
                   </button>
                 ))}
               </motion.div>

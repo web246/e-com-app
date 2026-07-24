@@ -42,7 +42,7 @@ export default function Home() {
   const flashProducts = products.filter((p) => p.discount_percent > 0).slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
+    <div className="min-h-screen bg-brown-light">
       <TopBar />
       <PageTransition>
 
