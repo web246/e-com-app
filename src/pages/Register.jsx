@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth, getErrorMessage } from "@/lib/AuthContext";
+import { useAuth, getErrorMessage, stashOtpPassword } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,7 +31,8 @@ export default function Register() {
     setLoading(true);
     try {
       await register({ email, password, full_name: fullName });
-      navigate(`/verify-otp?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+      stashOtpPassword(password);
+      navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
     } catch (err) {
       setError(getErrorMessage(err, "Registration failed"));
     } finally {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth, getErrorMessage } from "@/lib/AuthContext";
+import { useAuth, getErrorMessage, stashOtpPassword } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,7 +26,8 @@ export default function Login() {
       const msg = getErrorMessage(err, "Invalid email or password");
       setError(msg);
       if (err?.code === "UNVERIFIED" || msg.toLowerCase().includes("verify")) {
-        navigate(`/verify-otp?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+        stashOtpPassword(password);
+        navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
       }
     } finally {
       setLoading(false);

@@ -69,6 +69,13 @@ export const DELIVERY_METHODS = [
 export function formatPrice(amount, currency = 'KSH') {
   if (amount == null || isNaN(amount)) return `KSH 0`;
   const normalizedCurrency = String(currency || 'KSH').toUpperCase();
-  const displayCurrency = normalizedCurrency === 'DBP' || normalizedCurrency === 'KES' ? 'KSH' : normalizedCurrency;
+  const displayCurrency =
+    !normalizedCurrency
+      || normalizedCurrency === 'DBP'
+      || normalizedCurrency === 'KES'
+      || normalizedCurrency === 'GBP'
+      || normalizedCurrency === 'USD'
+      ? 'KSH'
+      : normalizedCurrency;
   return `${displayCurrency} ${Number(amount).toLocaleString('en-KE')}`;
 }

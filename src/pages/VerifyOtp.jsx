@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useAuth, getErrorMessage } from "@/lib/AuthContext";
+import { useAuth, getErrorMessage, takeOtpPassword } from "@/lib/AuthContext";
+import { hasTokens } from "@/lib/api/tokenStorage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +14,7 @@ export default function VerifyOtp() {
   const [params] = useSearchParams();
   const email = params.get("email") || "";
   const [otp, setOtp] = useState("");
-  const [password, setPassword] = useState(params.get("password") || "");
+  const [password] = useState(() => takeOtpPassword() || params.get("password") || "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -25,22 +26,25 @@ export default function VerifyOtp() {
     setLoading(true);
     try {
       await verifyOtp(email, otp);
-      // verification succeeded — attempt automatic login if password provided
       if (password) {
         try {
           await login(email, password);
+          if (!hasTokens()) {
+            setError("Verified, but session could not be saved. Please log in manually.");
+            navigate("/login");
+            return;
+          }
           navigate("/");
           return;
         } catch (loginErr) {
-          // show a clearer message: verification succeeded but automatic login failed
-          const msg = getErrorMessage(loginErr, 'Invalid email or password');
+          const msg = getErrorMessage(loginErr, "Invalid email or password");
           setError(`Verified, but automatic sign-in failed: ${msg}. Please log in manually.`);
           setLoading(false);
+          navigate("/login");
           return;
         }
       }
-      // no password supplied, just navigate to home or login
-      navigate('/');
+      navigate("/login");
     } catch (err) {
       setError(getErrorMessage(err, "Invalid or expired OTP"));
     } finally {

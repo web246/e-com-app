@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'r
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
+import DeepLinkHandler from './components/DeepLinkHandler';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { CartProvider } from '@/lib/useCart';
 import { WishlistProvider } from '@/lib/useWishlist';
@@ -91,6 +92,7 @@ function App() {
               <WishlistProvider>
                 <Router>
                   <ScrollToTop />
+                  <DeepLinkHandler />
                   <AuthenticatedApp />
                 </Router>
                 <Toaster />

@@ -5,6 +5,26 @@ import { getErrorMessage } from '@/lib/api/errors';
 
 const AuthContext = createContext(null);
 
+const OTP_PASSWORD_KEY = 'dm_otp_password';
+
+export function stashOtpPassword(password) {
+  try {
+    sessionStorage.setItem(OTP_PASSWORD_KEY, password || '');
+  } catch {
+    // ignore storage failures
+  }
+}
+
+export function takeOtpPassword() {
+  try {
+    const value = sessionStorage.getItem(OTP_PASSWORD_KEY) || '';
+    sessionStorage.removeItem(OTP_PASSWORD_KEY);
+    return value;
+  } catch {
+    return '';
+  }
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
@@ -24,6 +44,7 @@ export function AuthProvider({ children }) {
     (async () => {
       try {
         if (hasTokens()) await refreshUser();
+        else setUser(null);
       } catch {
         clearTokens();
         setUser(null);
@@ -36,6 +57,11 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const { user: loggedIn } = await authApi.login(email, password);
+    if (!hasTokens()) {
+      clearTokens();
+      setUser(null);
+      throw new Error('Sign-in succeeded but no session token was saved. Please try again.');
+    }
     setUser(loggedIn);
     return loggedIn;
   };
@@ -59,7 +85,7 @@ export function AuthProvider({ children }) {
   const forgotPassword = (email) => authApi.forgotPassword(email);
   const resetPassword = (token, new_password) => authApi.resetPassword(token, new_password);
 
-  const isAuthenticated = !!user;
+  const isAuthenticated = !!user && hasTokens();
 
   return (
     <AuthContext.Provider value={{

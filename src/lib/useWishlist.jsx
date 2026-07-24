@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import * as wishlistApi from '@/lib/api/wishlistService';
+import { getErrorMessage } from '@/lib/api/errors';
 
 const WishlistContext = createContext(null);
 
@@ -31,11 +32,15 @@ export function WishlistProvider({ children }) {
 
   const toggle = async (product) => {
     if (!isAuthenticated) throw new Error('Please log in to manage your wishlist');
-    const exists = items.some((p) => p.id === product.id);
-    const data = exists
-      ? await wishlistApi.removeWishlistItem(product.id)
-      : await wishlistApi.addWishlistItem(product.id);
-    setItems(data);
+    try {
+      const exists = items.some((p) => p.id === product.id);
+      const data = exists
+        ? await wishlistApi.removeWishlistItem(product.id)
+        : await wishlistApi.addWishlistItem(product.id);
+      setItems(data);
+    } catch (err) {
+      throw new Error(getErrorMessage(err, 'Could not update wishlist'));
+    }
   };
 
   const isWishlisted = (id) => items.some((p) => p.id === id);

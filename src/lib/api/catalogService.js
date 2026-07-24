@@ -27,7 +27,15 @@ export async function fetchProduct(id) {
 export async function fetchCategories(parent_id) {
   const data = await apiGetPublic(`/public/categories${buildQuery({ parent_id })}`);
   const list = Array.isArray(data) ? data : data.items || [];
-  return list.length ? list.map(mapCategory) : DEFAULT_CATEGORIES.map(mapCategory);
+  if (list.length) {
+    return list.map((c) => ({ ...mapCategory(c), isFallback: false }));
+  }
+  // Default UI categories are display-only — never send their fake IDs to the API.
+  return DEFAULT_CATEGORIES.map((c) => ({
+    ...mapCategory(c),
+    id: null,
+    isFallback: true,
+  }));
 }
 
 export async function fetchStores({ page = 1, page_size = 20 } = {}) {

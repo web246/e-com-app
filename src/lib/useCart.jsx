@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useCallback } from 'rea
 import { useAuth } from '@/lib/AuthContext';
 import * as cartApi from '@/lib/api/cartService';
 import { validateCoupon } from '@/lib/api/orderService';
+import { getErrorMessage } from '@/lib/api/errors';
 
 const CartContext = createContext(null);
 
@@ -44,8 +45,12 @@ export function CartProvider({ children }) {
 
   const addItem = async (product, quantity = 1) => {
     if (!isAuthenticated) throw new Error('Please log in to add items to your cart');
-    const data = await cartApi.addCartItem(product.id, quantity);
-    applyCartResponse(data);
+    try {
+      const data = await cartApi.addCartItem(product.id, quantity);
+      applyCartResponse(data);
+    } catch (err) {
+      throw new Error(getErrorMessage(err, 'Could not add item to cart'));
+    }
   };
 
   const removeItem = async (key) => {
