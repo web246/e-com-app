@@ -1,25 +1,37 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import image1 from '@/assets/onboarding-1.png';
-import image2 from '@/assets/onboarding-2.png';
-import image3 from '@/assets/onboarding-3.png';
+import { Truck, Lock, MapPin } from 'lucide-react';
+import logo from '@/assets/logo.png';
+import splashCart from '@/assets/splash-cart.png';
+import imageBrowse from '@/assets/onboarding-browse.png';
+import imageDeliver from '@/assets/onboarding-deliver.png';
+import imageShop from '@/assets/onboarding-shop.png';
 
-const slides = [
+const features = [
+  { icon: Truck, label: 'Fast Delivery' },
+  { icon: Lock, label: 'Secure Pay' },
+  { icon: MapPin, label: 'Worldwide' },
+];
+
+const steps = [
   {
-    title: 'Straight to your door',
-    description: 'Ready to shop? Browse with easy filtering options and intuitive navigation.',
-    image: image1,
+    title: 'Explore Global Stores.',
+    description:
+      'Browse thousands of products from the UK, US, UAE and China, all in one place.',
+    image: imageBrowse,
   },
   {
-    title: 'Level Up Your Style',
-    description: 'Shop smarter, dress bolder, and embrace your individuality to inspire every fashion moment.',
-    image: image2,
+    title: 'We Deliver Worldwide.',
+    description:
+      'Wherever you shop from, we get your order delivered straight to your door.',
+    image: imageDeliver,
   },
   {
-    title: 'Build Your Wishlist',
-    description: 'Start building your dream wardrobe and save your favourite items to access them later.',
-    image: image3,
+    title: 'Enjoy Easy Shopping.',
+    description:
+      'Fast checkout, secure payments, and order tracking, all in a few simple taps.',
+    image: imageShop,
   },
 ];
 
@@ -33,56 +45,122 @@ export default function Onboarding() {
   };
 
   const next = () => {
-    if (current < slides.length - 1) {
+    if (current < steps.length) {
       setCurrent((value) => value + 1);
     } else {
       completeOnboarding();
     }
   };
 
-  const slide = slides[current];
+  const isIntro = current === 0;
+  const stepIndex = current - 1;
+  const step = steps[stepIndex];
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#FFF8F1_0%,#F6EBDD_100%)] flex flex-col">
-      <div className="flex justify-between items-center p-6">
-        {current > 0 ? (
-          <button onClick={() => setCurrent(c => c - 1)} className="text-[#6D3F23] font-medium text-sm">Back</button>
-        ) : <div />}
-        <button onClick={completeOnboarding} className="text-[#7A4F2D] text-sm font-medium hover:text-[#4A2A1A]">Skip</button>
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="flex justify-end items-center px-6 pt-6 pb-2">
+        <button
+          type="button"
+          onClick={completeOnboarding}
+          className="text-[#8A8A8A] text-sm font-medium hover:text-[var(--color-brown)]"
+        >
+          Skip
+        </button>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-8 pb-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-8 pb-10">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.title}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.25 }}
-            className="flex flex-col items-center text-center max-w-sm"
-          >
-            <div className="w-72 h-72 rounded-[2rem] overflow-hidden mb-10 shadow-[0_20px_60px_rgba(74,42,26,0.15)] relative border border-[#E6D1B6]">
-              <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#2F1A0F]/30 to-transparent" />
-            </div>
+          {isIntro ? (
+            <motion.div
+              key="intro"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.28 }}
+              className="flex flex-col items-center text-center w-full max-w-sm"
+            >
+              <img
+                src={logo}
+                alt="Dennis Mendez"
+                className="w-24 h-24 object-contain mb-5"
+              />
+              <h1 className="font-brand text-3xl text-[#1A1A1A] mb-2">
+                Dennis Mendez.
+              </h1>
+              <p className="text-[#6B6B6B] text-base mb-8">
+                The Complete Online Store
+              </p>
 
-            <h1 className="font-display font-bold text-4xl text-[#3F2415] mb-4">{slide.title}</h1>
-            <p className="text-[#6F5848] text-lg leading-relaxed">{slide.description}</p>
-          </motion.div>
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+                {features.map(({ icon: Icon, label }) => (
+                  <div
+                    key={label}
+                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-white text-xs font-medium"
+                    style={{ backgroundColor: 'var(--color-brown)' }}
+                  >
+                    <Icon size={14} strokeWidth={2.25} />
+                    <span>{label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <img
+                src={splashCart}
+                alt=""
+                className="w-44 h-auto object-contain mb-10"
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key={step.title}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.28 }}
+              className="flex flex-col items-center text-center w-full max-w-sm"
+            >
+              <div className="w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-[#F3F3F3] overflow-hidden mb-8 flex items-center justify-center">
+                <img
+                  src={step.image}
+                  alt=""
+                  className="w-[88%] h-[88%] object-contain"
+                />
+              </div>
+
+              <h1 className="font-display font-bold text-2xl sm:text-3xl text-[#1A1A1A] mb-3">
+                {step.title}
+              </h1>
+              <p className="text-[#6B6B6B] text-base leading-relaxed max-w-xs">
+                {step.description}
+              </p>
+            </motion.div>
+          )}
         </AnimatePresence>
 
-        <div className="flex gap-2 mt-10 mb-8">
-          {slides.map((_, i) => (
-            <div key={i} className={`h-2 rounded-full transition-all duration-300 ${i === current ? 'w-8 bg-[#4A2A1A]' : 'w-2 bg-[#D8C2A6]'}`} />
-          ))}
-        </div>
+        {!isIntro && (
+          <div className="flex gap-2 mt-8 mb-6">
+            {steps.map((_, i) => (
+              <div
+                key={i}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === stepIndex
+                    ? 'w-2.5 bg-[var(--color-brown)]'
+                    : 'w-2 bg-[#D9D9D9]'
+                }`}
+              />
+            ))}
+          </div>
+        )}
+
+        {isIntro && <div className="mt-2 mb-6" />}
 
         <button
           type="button"
           onClick={next}
-          className="w-full max-w-sm py-4 text-lg rounded-2xl font-semibold text-white shadow-lg bg-[#4A2A1A] hover:bg-[#6D3F23] transition-all"
+          className="w-full max-w-sm py-4 text-lg rounded-2xl font-semibold text-white shadow-md transition-colors hover:opacity-90"
+          style={{ backgroundColor: 'var(--color-brown)' }}
         >
-          {current < slides.length - 1 ? 'Continue' : 'Get Started'}
+          Next
         </button>
       </div>
     </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -78,6 +78,7 @@
 
 @layer utilities {
   .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-brand { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; }
   .font-body { font-family: 'Inter', sans-serif; }
 
   .hydro-shadow { box-shadow: var(--hydro-shadow); }

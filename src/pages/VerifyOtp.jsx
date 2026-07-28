@@ -73,8 +73,8 @@ export default function VerifyOtp() {
       footer={
         <>
           Already verified?{" "}
-          <Link to="/login" className="text-brand font-semibold hover:underline">
-            Log in
+          <Link to="/login" className="font-semibold text-[var(--color-accent)] hover:underline">
+            Sign in
           </Link>
         </>
       }

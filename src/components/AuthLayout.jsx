@@ -1,30 +1,28 @@
 import { motion } from 'framer-motion';
-import logo from '@/assets/logo.png';
 
-export default function AuthLayout({ icon: Icon, title, subtitle, children, footer }) {
+export default function AuthLayout({ title, subtitle, children, footer }) {
   return (
-    <div className="min-h-screen bg-[#421313] flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-white flex flex-col px-6 pt-14 pb-10">
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-md rounded-[28px] border border-[#D9D2CB]/60 bg-[#F7F3EF] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.28)]"
+        transition={{ duration: 0.35 }}
+        className="w-full max-w-md mx-auto flex-1 flex flex-col"
       >
-        <div className="flex flex-col items-center text-center mb-6">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-[#D9D2CB] bg-[#F7F3EF] shadow-sm">
-            {Icon ? (
-              <img src={logo} alt="logo" className="h-full w-full object-contain p-1" />
-            ) : (
-              <img src={logo} alt="logo" className="h-full w-full object-contain p-1" />
-            )}
-          </div>
-          <h1 className="font-display text-2xl font-bold text-[#421313]">{title}</h1>
-          {subtitle && <p className="mt-1 text-sm text-[#6f5848]">{subtitle}</p>}
-        </div>
+        <h1 className="font-display text-[2rem] leading-tight font-bold text-center text-[#1A1A1A] mb-2">
+          {title}
+        </h1>
+        {subtitle ? (
+          <p className="text-center text-sm text-[#8A8A8A] mb-8">{subtitle}</p>
+        ) : (
+          <div className="mb-8" />
+        )}
 
-        {children}
+        <div className="flex-1 flex flex-col">{children}</div>
 
-        {footer && <p className="mt-6 text-center text-sm text-[#6f5848]">{footer}</p>}
+        {footer && (
+          <p className="mt-8 text-center text-sm text-[#6B6B6B]">{footer}</p>
+        )}
       </motion.div>
     </div>
   );
