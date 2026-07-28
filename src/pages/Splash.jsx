@@ -8,6 +8,34 @@ const PHASE_LOGO_MS = 1000;
 const PHASE_BRANDED_MS = 1400;
 
 export default function Splash() {
+  const navigate = useNavigate();
+  const { isAuthenticated, authChecked } = useAuth();
+  const [phase, setPhase] = useState(0);
+
+  useEffect(() => {
+    const toBranded = setTimeout(() => setPhase(1), PHASE_LOGO_MS);
+    return () => clearTimeout(toBranded);
+  }, []);
+
+  useEffect(() => {
+    if (phase !== 1) return undefined;
+
+    const timer = setTimeout(() => {
+      if (authChecked && isAuthenticated) {
+        navigate('/', { replace: true });
+        return;
+      }
+      if (localStorage.getItem('linet_onboarding_seen') === 'true') {
+        navigate('/login', { replace: true });
+        return;
+      }
+      navigate('/onboarding', { replace: true });
+    }, PHASE_BRANDED_MS);
+
+    return () => clearTimeout(timer);
+  }, [phase, navigate, authChecked, isAuthenticated]);
+
+  return (
     <div
       className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
       style={{ backgroundColor: 'var(--color-brown)' }}
@@ -26,34 +54,6 @@ export default function Splash() {
               src={logo}
               alt="Dennis Mendez"
               className="w-36 h-36 object-contain mix-blend-multiply"
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          Dennis Mendez
-        </motion.h1>
-
-        <motion.p
-          className="text-white/80 text-sm font-medium"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          Everything You Need, Delivered.
-        </motion.p>
-
-        <motion.div
-          className="mt-12 flex items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-        >
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="w-2 h-2 bg-white/60 rounded-full"
-              animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
->>>>>>> 07e3576 (ci(android): add GitHub Actions workflow to build APK)
             />
           </motion.div>
         ) : (
