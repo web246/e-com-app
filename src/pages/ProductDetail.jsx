@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Heart, Minus, Plus, Truck, ShieldCheck, RotateCcw, ChevronLeft } from 'lucide-react';
-import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import ProductGrid from '@/components/home/ProductGrid';
@@ -82,7 +81,6 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-brown-light">
-      <TopBar />
       <PageTransition>
       <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-slate-500 mb-4 hover:text-slate-700">

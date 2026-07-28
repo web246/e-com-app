@@ -1,7 +1,6 @@
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Package, Home } from 'lucide-react';
-import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import { formatPrice } from '@/lib/constants';
@@ -24,7 +23,6 @@ export default function OrderSuccess() {
 
   return (
     <div className="min-h-screen bg-brown-light">
-      <TopBar />
       <PageTransition>
       <div className="max-w-md mx-auto px-4 pt-32 pb-32 text-center">
         <motion.div

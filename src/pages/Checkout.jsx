@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, MapPin, Truck, CreditCard, ClipboardCheck } from 'lucide-react';
-import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import { Input } from '@/components/ui/input';
@@ -100,7 +99,6 @@ export default function Checkout() {
 
   return (
     <div className="min-h-screen bg-brown-light">
-      <TopBar />
       <PageTransition>
       <div className="max-w-3xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-6">Checkout</h1>

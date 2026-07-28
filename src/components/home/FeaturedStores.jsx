@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, BadgeCheck } from 'lucide-react';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -43,9 +44,12 @@ export default function FeaturedStores() {
               <Star size={12} className="fill-amber-400 text-amber-400" />
               <span className="text-xs text-[#7a675a]">{store.rating} · {store.city || store.category}</span>
             </div>
-            <button className="text-xs font-semibold text-[#4A2A1A] border border-[#D9B48A]/60 rounded-full px-3 py-1 mt-1 hover:bg-brown-light transition-all">
+            <Link
+              to={`/store/${store.slug}`}
+              className="text-xs font-semibold text-[#4A2A1A] border border-[#D9B48A]/60 rounded-full px-3 py-1 mt-1 hover:bg-brown-light transition-all"
+            >
               View Store
-            </button>
+            </Link>
           </motion.div>
         ))}
       </div>

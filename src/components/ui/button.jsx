@@ -2,11 +2,11 @@ import { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 const variants = {
-  default: 'bg-[#4A2A1A] text-white hover:bg-[#6D3F23] shadow-sm',
+  default: 'bg-[#7D2B2B] text-white hover:bg-[#A24A3A] shadow-sm',
   outline: 'border border-[#D9D2CB] bg-[#F7F3EF] text-[#421313] hover:bg-[#f2e9e0]',
   ghost: 'text-[#421313] hover:bg-[#f2e9e0]',
   destructive: 'bg-[#E54545] text-white hover:bg-[#c93c3c]',
-  accent: 'bg-[#391212] text-white hover:bg-[#4A2A1A]',
+  accent: 'bg-[#7D2B2B] text-white hover:bg-[#A24A3A]',
 };
 
 const sizes = {

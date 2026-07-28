@@ -17,7 +17,7 @@ export default function BottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pb-safe md:hidden">
-      <div className="rounded-2xl shadow-lg border border-[#8B5E3B]/25 px-2 py-2 max-w-md mx-auto flex items-center justify-between relative bg-[#4A2A1A] text-[#F6EBDD]">
+      <div className="rounded-2xl shadow-lg border border-[#7D2B2B]/25 px-2 py-2 max-w-md mx-auto flex items-center justify-between relative bg-[#7D2B2B] text-[#F6EBDD]">
         {TABS.map(({ to, icon: Icon, label }) => {
           const active = to === '/' ? pathname === '/' : pathname.startsWith(to);
           return (

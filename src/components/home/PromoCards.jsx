@@ -20,7 +20,7 @@ export default function PromoCards() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.08 }}
-            className="linet-card p-4 flex flex-col gap-2 hydro-shadow-hover cursor-pointer"
+            className="p-4 flex flex-col gap-2 cursor-pointer"
           >
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${promo.color}15` }}>
               <Icon size={18} style={{ color: promo.color }} />

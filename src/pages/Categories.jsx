@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Cpu, Shirt, Smartphone, Monitor, Sofa, Gamepad2, Sparkles, Footprints, ShoppingBasket, UtensilsCrossed, Car, Heart, Dumbbell, Grid3X3 } from 'lucide-react';
-import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import { enrichCategory } from '@/lib/constants';
@@ -23,7 +22,6 @@ export default function Categories() {
 
   return (
     <div className="min-h-screen bg-brown-light">
-      <TopBar />
       <PageTransition>
       <div className="max-w-5xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-3xl text-[#0A0F1E] mb-2">All Categories</h1>

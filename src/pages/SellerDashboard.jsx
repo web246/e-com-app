@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { LayoutDashboard, Package, ShoppingBag, TrendingUp, Settings, Plus } from 'lucide-react';
-import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import { formatPrice } from '@/lib/constants';
@@ -27,7 +26,6 @@ export default function SellerDashboard() {
 
   return (
     <div className="min-h-screen bg-brown-light">
-      <TopBar />
       <PageTransition>
       <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-6">Seller Dashboard</h1>

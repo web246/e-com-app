@@ -6,12 +6,13 @@
 
 @layer base {
   :root {
-    --color-primary: #6D3F23; /* brown accent from hero */
-    --color-primary-dark: #4A2A1A;
-    --color-brown: #391212; /* sampled silhouette brown */
-    --color-brown-dark: #550E0F;
-    --color-brown-light: #f3e8dc;
-    --color-accent: #DA212A; /* sampled red outline */
+    font-size: 14px;
+    --color-primary: #7D2B2B;
+    --color-primary-dark: #5C1F1F;
+    --color-brown: #7D2B2B;
+    --color-brown-dark: #5C1F1F;
+    --color-brown-light: #f7ece7;
+    --color-accent: #A24A3A;
     --on-brown: #F7F3EF; /* light text to use on dark brown surfaces */
 
     --background: 26 60% 97%;
@@ -64,8 +65,8 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 14px;
+    line-height: 1.55;
     background-image: linear-gradient(180deg, #f6efe9 0%, #f8f2eb 100%);
     background-attachment: fixed;
   }
@@ -74,6 +75,9 @@
     letter-spacing: -0.02em;
     font-weight: 700;
   }
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.16rem; }
+  h3 { font-size: 1.02rem; }
 }
 
 @layer utilities {
@@ -102,7 +106,7 @@
   }
 
   .gradient-primary { background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); }
-  .gradient-accent { background: linear-gradient(135deg, var(--color-brown), #7B3F1D); }
+  .gradient-accent { background: linear-gradient(135deg, var(--color-brown), #A24A3A); }
   .gradient-hero { background: linear-gradient(180deg, var(--color-brown) 0%, var(--color-brown-dark) 100%); }
 
   /* Dark brown hero/bg utility */

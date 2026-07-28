@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { User, Package, Heart, MapPin, Bell, Moon, Sun, LogOut, ChevronRight } from 'lucide-react';
-import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import { useAuth } from '@/lib/AuthContext';
@@ -19,7 +18,6 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#FFF8F1_0%,#F6EBDD_100%)]">
-      <TopBar />
       <PageTransition>
       <div className="max-w-2xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <div className="linet-card p-6 flex items-center gap-4 mb-6">

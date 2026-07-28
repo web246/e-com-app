@@ -42,11 +42,11 @@ export default function Home() {
   const flashProducts = products.filter((p) => p.discount_percent > 0).slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-brown-light">
+    <div className="min-h-screen bg-white">
       <TopBar />
       <PageTransition>
 
-      <div className="relative pt-28 pb-4 sm:pb-6 bg-gradient-to-b from-[#4A2A1A] via-[#6D3F23] to-[#F6EBDD]">
+      <div className="relative pt-28 pb-4 sm:pb-6 bg-white">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-6">
           <HeroBanner />
         </div>
@@ -66,6 +66,7 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
+          className="mt-6 sm:mt-8"
         >
           <SectionHeader title="Shop by Category" viewAllTo="/categories" />
           <CategoryStrip />

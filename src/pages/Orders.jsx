@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Package, ChevronDown, MapPin } from 'lucide-react';
-import TopBar from '@/components/layout/TopBar';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import { formatPrice } from '@/lib/constants';
@@ -33,7 +32,6 @@ export default function Orders() {
   if (orders.length === 0) {
     return (
       <div className="min-h-screen bg-brown-light">
-        <TopBar />
         <PageTransition>
         <div className="max-w-xl mx-auto px-4 pt-32 pb-32 text-center">
           <div className="w-24 h-24 rounded-full bg-brown-light flex items-center justify-center mx-auto mb-6">
@@ -50,7 +48,6 @@ export default function Orders() {
 
   return (
     <div className="min-h-screen bg-brown-light">
-      <TopBar />
       <PageTransition>
       <div className="max-w-3xl mx-auto px-4 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-6">My Orders</h1>

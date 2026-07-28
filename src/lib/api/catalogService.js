@@ -11,8 +11,8 @@ function buildQuery(params) {
   return s ? `?${s}` : '';
 }
 
-export async function fetchProducts({ page = 1, page_size = 20, search, category_id } = {}) {
-  const data = await apiGetPublic(`/public/products${buildQuery({ page, page_size, search, category_id })}`);
+export async function fetchProducts({ page = 1, page_size = 20, search, category_id, vendor_slug } = {}) {
+  const data = await apiGetPublic(`/public/products${buildQuery({ page, page_size, search, category_id, vendor_slug })}`);
   return {
     items: (data.items || []).map(mapProduct),
     pagination: data.pagination || {},
@@ -44,6 +44,16 @@ export async function fetchStores({ page = 1, page_size = 20 } = {}) {
     items: (data.items || []).map(mapStore),
     pagination: data.pagination || {},
   };
+}
+
+export async function fetchStoreBySlug(slug) {
+  try {
+    const data = await apiGetPublic(`/public/stores/${slug}`);
+    return mapStore(data);
+  } catch (err) {
+    const { items } = await fetchStores({ page: 1, page_size: 100 });
+    return items.find((store) => store.slug === slug) || null;
+  }
 }
 
 export async function fetchShippingChannels() {

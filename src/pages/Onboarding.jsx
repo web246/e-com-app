@@ -52,6 +52,7 @@ export default function Onboarding() {
     }
   };
 
+<<<<<<< HEAD
   const isIntro = current === 0;
   const stepIndex = current - 1;
   const step = steps[stepIndex];
@@ -162,6 +163,59 @@ export default function Onboarding() {
         >
           Next
         </button>
+  const slide = slides[current];
+  const buttonLabel = current < slides.length - 1 ? 'Continue' : 'Start Shopping';
+
+  return (
+    <div className="min-h-screen bg-[linear-gradient(180deg,#FCF5EE_0%,#F7EBDD_100%)]">
+      <div className="mx-auto flex min-h-screen max-w-md flex-col px-4 py-4 sm:px-6">
+        <div className="flex items-center justify-between">
+          {current > 0 ? (
+            <button onClick={() => setCurrent((c) => c - 1)} className="text-sm font-medium text-[#7D2C2B]">
+              Back
+            </button>
+          ) : (
+            <div />
+          )}
+          <button onClick={completeOnboarding} className="text-sm font-medium text-[#7D2C2B] hover:text-[#5E1F1E]">
+            Skip
+          </button>
+        </div>
+
+        <div className="flex flex-1 flex-col justify-center py-3">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={slide.title}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.25 }}
+              className="flex flex-col"
+            >
+              <div className="relative h-[72vh] min-h-[420px] overflow-hidden rounded-[2rem] border border-[#E8D7C1] bg-[#FFF9F3] shadow-[0_20px_60px_rgba(74,42,26,0.12)]">
+                <img src={slide.image} alt={slide.title} className="h-full w-full object-cover" />
+              </div>
+
+              <button
+                type="button"
+                onClick={next}
+                className="mt-5 inline-flex items-center justify-center rounded-full bg-[#7D2B2B] px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-[#5E1F1F]"
+              >
+                {buttonLabel}
+              </button>
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="mt-6 flex justify-center gap-2">
+            {slides.map((_, i) => (
+              <div
+                key={i}
+                className={`h-2 rounded-full transition-all duration-300 ${i === current ? 'w-8 bg-[#7D2C2B]' : 'w-2 bg-[#D8C2A6]'}`}
+              />
+            ))}
+          </div>
+        </div>
+>>>>>>> 07e3576 (ci(android): add GitHub Actions workflow to build APK)
       </div>
     </div>
   );
