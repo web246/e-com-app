@@ -17,7 +17,8 @@ export default function DeepLinkHandler() {
 
     (async () => {
       try {
-        const { App } = await import('@capacitor/app');
+        // dynamic import via eval to avoid Vite/Rollup resolving this on web builds
+        const { App } = await eval('import("@capacitor/app")');
         if (cancelled) return;
 
         const routeFromUrl = (url) => {

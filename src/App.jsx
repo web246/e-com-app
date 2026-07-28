@@ -12,7 +12,7 @@ import { ThemeProvider } from '@/lib/useTheme';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 import Splash from '@/pages/Splash';
-import Onboarding from '@/pages/Onboarding';
+import Onboarding from '@/pages/OnboardingStub';
 import Home from '@/pages/Home';
 import ProductDetail from '@/pages/ProductDetail';
 import Store from '@/pages/Store';
