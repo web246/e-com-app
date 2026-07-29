@@ -31,7 +31,7 @@ export default function ProductGrid({ products, loading, cols = 4, compact = fal
   }
 
   return (
-    <div className={`grid ${colClass} gap-2 sm:gap-2.5 items-start`}>
+    <div className={`grid ${colClass} ${compact ? 'gap-3 sm:gap-4' : 'gap-2 sm:gap-2.5'} items-start`}>
       {products.map(p => <ProductCard key={p.id} product={p} compact={compact} />)}
     </div>
   );

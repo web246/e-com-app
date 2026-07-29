@@ -156,7 +156,7 @@ export default function Register() {
         <Button
           type="submit"
           disabled={loading}
-          className="mt-2 h-14 w-full rounded-2xl bg-[var(--color-brown)] text-base font-semibold text-white hover:bg-[var(--color-brown-dark)]"
+          className="mt-2 h-14 w-full rounded-full bg-[var(--color-brown)] text-base font-semibold text-white hover:bg-[var(--color-brown-dark)]"
         >
           {loading ? (
             <>

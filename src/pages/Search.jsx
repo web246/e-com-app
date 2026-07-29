@@ -4,7 +4,6 @@ import { SlidersHorizontal, X } from 'lucide-react';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import PullToRefresh from '@/components/ui/PullToRefresh';
-import { SimpleSelect } from '@/components/ui/select';
 import ProductGrid from '@/components/home/ProductGrid';
 import { enrichCategory } from '@/lib/constants';
 import { fetchProducts, fetchCategories } from '@/lib/api/catalogService';
@@ -99,11 +98,13 @@ export default function Search() {
       <PageTransition>
         <PullToRefresh onRefresh={loadProducts}>
           <div className="max-w-7xl mx-auto px-4 sm:px-5 pt-20 pb-24 md:pb-16">
-            <div className="mb-2">
-              <h1 className="font-display font-bold text-lg text-[#0A0F1E] leading-tight">
-                {query ? <>Results for <span className="text-brand">"{query}"</span></> : 'All Products'}
-              </h1>
-              <p className="text-slate-500 text-[11px] mt-0.5">{loading ? 'Searching...' : `${products.length} products found`}</p>
+            <div className="mb-4">
+              <div>
+                <h1 className="font-display font-bold text-lg text-[#0A0F1E] leading-tight">
+                  {query ? <>Results for <span className="text-brand">"{query}"</span></> : 'All Products'}
+                </h1>
+                <p className="text-slate-500 text-[11px] mt-0.5">{loading ? 'Searching...' : `${products.length} products found`}</p>
+              </div>
             </div>
 
             {error && (
@@ -146,8 +147,24 @@ export default function Search() {
               </aside>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-2 gap-2">
-                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide lg:hidden">
+                <div className="mb-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-2.5">
+                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+                    <div className="flex shrink-0 items-center gap-1.5 px-1 text-[11px] font-semibold text-slate-700">
+                      <SlidersHorizontal size={14} className="text-brand" /> Sort by
+                    </div>
+                    {SORT_OPTIONS.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setSort(option.value)}
+                        className={`shrink-0 rounded-full px-3 py-2 text-[11px] font-semibold transition-colors ${sort === option.value ? 'bg-brand text-white shadow-sm' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:text-brand'}`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mb-3 gap-2">
+                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
                     {categories.slice(0, 6).map(cat => (
                       <button
                         key={cat.slug || cat.id}
@@ -157,10 +174,6 @@ export default function Search() {
                         {cat.name}
                       </button>
                     ))}
-                  </div>
-                  <div className="flex items-center gap-1.5 ml-auto flex-shrink-0">
-                    <span className="text-[10px] text-slate-500 hidden sm:inline">Sort:</span>
-                    <SimpleSelect value={sort} onChange={setSort} options={SORT_OPTIONS} />
                   </div>
                 </div>
                 <ProductGrid products={products} loading={loading} cols={2} compact />

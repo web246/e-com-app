@@ -100,7 +100,7 @@ export default function Onboarding() {
         <button
           type="button"
           onClick={next}
-          className="w-full max-w-sm py-4 text-lg rounded-2xl font-semibold text-white shadow-md transition-colors hover:opacity-90"
+          className="w-full max-w-sm py-4 text-lg rounded-full font-semibold text-white shadow-md transition-colors hover:opacity-90"
           style={{ backgroundColor: 'var(--color-brown)' }}
         >
           Next
