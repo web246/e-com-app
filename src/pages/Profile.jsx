@@ -17,9 +17,9 @@ export default function Profile() {
   const { dark, toggle } = useTheme();
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#FFF8F1_0%,#F6EBDD_100%)]">
+    <div className="min-h-screen bg-white">
       <PageTransition>
-      <div className="max-w-2xl mx-auto px-4 pt-24 pb-32 md:pb-16">
+      <div className="max-w-2xl mx-auto px-4 sm:px-5 pt-24 pb-32 md:pb-16">
         <div className="linet-card p-6 flex items-center gap-4 mb-6">
           <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center flex-shrink-0">
             <User size={28} className="text-white" />

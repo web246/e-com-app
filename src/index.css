@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,7 +11,7 @@
     --color-primary-dark: #5C1F1F;
     --color-brown: #7D2B2B;
     --color-brown-dark: #5C1F1F;
-    --color-brown-light: #f7ece7;
+    --color-brown-light: #ffffff;
     --color-accent: #A24A3A;
     --on-brown: #F7F3EF; /* light text to use on dark brown surfaces */
 
@@ -64,10 +64,11 @@
   * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    line-height: 1.55;
-    background-image: linear-gradient(180deg, #f6efe9 0%, #f8f2eb 100%);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    background-color: #ffffff;
+    background-image: none;
     background-attachment: fixed;
   }
   h1, h2, h3, h4, h5, h6 {
@@ -75,15 +76,14 @@
     letter-spacing: -0.02em;
     font-weight: 700;
   }
-  h1 { font-size: 1.4rem; }
-  h2 { font-size: 1.16rem; }
-  h3 { font-size: 1.02rem; }
+  h1 { font-size: 1.3rem; }
+  h2 { font-size: 1.08rem; }
+  h3 { font-size: 0.96rem; }
 }
 
 @layer utilities {
   .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
-  .font-brand { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; }
-  .font-body { font-family: 'Inter', sans-serif; }
+  .font-brand, .font-body { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; }
 
   .hydro-shadow { box-shadow: var(--hydro-shadow); }
   .hydro-shadow-hover:hover { box-shadow: var(--hydro-shadow-hover); }
@@ -116,7 +116,7 @@
 
   .linet-card,
   .card-surface {
-    @apply rounded-[1.75rem] transition-all duration-300 border bg-[#FFF8F1];
+    @apply rounded-[1.75rem] transition-all duration-300 border bg-white;
     border-color: rgba(217, 210, 186, 0.65);
     color: #3F2415;
     box-shadow: 0 16px 35px rgba(57, 18, 18, 0.09);
@@ -158,6 +158,7 @@
   }
 
   .text-brand-dark { color: var(--color-brown) !important; }
+  .bg-brown-light { background: #ffffff !important; }
 
   .price-display {
     font-family: 'Plus Jakarta Sans', sans-serif;

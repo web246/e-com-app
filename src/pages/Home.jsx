@@ -47,13 +47,13 @@ export default function Home() {
       <PageTransition>
 
       <div className="relative pt-28 pb-4 sm:pb-6 bg-white">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-5 pt-4 sm:pt-6">
           <HeroBanner />
         </div>
       </div>
 
       <PullToRefresh onRefresh={loadProducts}>
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 space-y-10 sm:space-y-16 pb-28 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-5 space-y-10 sm:space-y-16 pb-28 md:pb-16">
         {error && (
           <div className="rounded-xl bg-red-50 text-red-600 text-sm p-4 flex items-center justify-between">
             <span>{error}</span>

@@ -82,14 +82,14 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen bg-brown-light">
       <PageTransition>
-      <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 md:pb-16">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 pt-24 pb-32 md:pb-16">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-slate-500 mb-4 hover:text-slate-700">
           <ChevronLeft size={16} /> Back
         </button>
 
         <div className="grid md:grid-cols-2 gap-8">
           <div>
-            <div className="aspect-square rounded-3xl overflow-hidden bg-white shadow-lg mb-3">
+            <div className="aspect-[5/4] rounded-3xl overflow-hidden bg-white shadow-lg mb-3">
               {images[activeImg] ? (
                 <img src={images[activeImg]} alt={product.name} className="w-full h-full object-cover" />
               ) : (

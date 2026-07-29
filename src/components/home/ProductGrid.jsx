@@ -3,16 +3,20 @@ import { SkeletonCard } from '@/components/ui/SkeletonCard';
 
 export default function ProductGrid({ products, loading, cols = 4, compact = false }) {
   const colClass = compact
-    ? 'grid-cols-2'
+    ? {
+        2: 'grid-cols-2',
+        3: 'grid-cols-3',
+        4: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
+      }[cols] || 'grid-cols-2'
     : {
         2: 'grid-cols-2',
-        3: 'grid-cols-2',
-        4: 'grid-cols-2',
+        3: 'grid-cols-3',
+        4: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
       }[cols] || 'grid-cols-2';
 
   if (loading) {
     return (
-      <div className={`grid ${colClass} gap-1.5 sm:gap-2`}>
+      <div className={`grid ${colClass} gap-2 sm:gap-2.5`}>
         {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
       </div>
     );
@@ -27,7 +31,7 @@ export default function ProductGrid({ products, loading, cols = 4, compact = fal
   }
 
   return (
-    <div className={`grid ${colClass} gap-1.5 sm:gap-2 items-start`}>
+    <div className={`grid ${colClass} gap-2 sm:gap-2.5 items-start`}>
       {products.map(p => <ProductCard key={p.id} product={p} compact={compact} />)}
     </div>
   );

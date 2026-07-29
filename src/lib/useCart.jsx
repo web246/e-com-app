@@ -1,10 +1,9 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import * as cartApi from '@/lib/api/cartService';
 import { validateCoupon } from '@/lib/api/orderService';
 import { getErrorMessage } from '@/lib/api/errors';
-
-const CartContext = createContext(null);
+import { CartContext } from '@/lib/cartContext';
 
 export function CartProvider({ children }) {
   const { isAuthenticated } = useAuth();

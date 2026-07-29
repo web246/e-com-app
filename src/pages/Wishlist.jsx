@@ -11,7 +11,7 @@ export default function Wishlist() {
   return (
     <div className="min-h-screen bg-brown-light">
       <PageTransition>
-      <div className="max-w-6xl mx-auto px-4 pt-24 pb-32 md:pb-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-5 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-6">My Wishlist ({items.length})</h1>
 
         {items.length === 0 ? (

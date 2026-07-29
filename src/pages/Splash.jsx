@@ -18,10 +18,10 @@ export default function Splash() {
   }, []);
 
   useEffect(() => {
-    if (phase !== 1) return undefined;
+    if (phase !== 1 || !authChecked) return undefined;
 
     const timer = setTimeout(() => {
-      if (authChecked && isAuthenticated) {
+      if (isAuthenticated) {
         navigate('/', { replace: true });
         return;
       }

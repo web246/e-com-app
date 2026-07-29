@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, MapPin, Truck, CreditCard, ClipboardCheck } from 'lucide-react';
+import { Check, MapPin, Truck, CreditCard, ClipboardCheck, Bike, Store, Banknote, LockKeyhole } from 'lucide-react';
 import BottomNav from '@/components/layout/BottomNav';
 import PageTransition from '@/components/ui/PageTransition';
 import { Input } from '@/components/ui/input';
@@ -20,14 +20,51 @@ const STEPS = [
   { id: 4, label: 'Review', icon: ClipboardCheck },
 ];
 
+const PAYMENT_LOGOS = {
+  mpesa: [
+    { name: 'M-Pesa', src: 'https://commons.wikimedia.org/wiki/Special:FilePath/M-PESA_LOGO-01.svg?width=160' },
+  ],
+  card: [
+    { name: 'Visa', src: 'https://cdn.simpleicons.org/visa/1A1F71' },
+    { name: 'Mastercard', src: 'https://cdn.simpleicons.org/mastercard/EB001B' },
+  ],
+};
+
+function PaymentMethodLogo({ method }) {
+  const logos = PAYMENT_LOGOS[method];
+
+  if (!logos) {
+    return (
+      <div className="w-12 h-10 rounded-lg bg-brand/10 text-brand flex items-center justify-center" aria-hidden="true">
+        <Banknote size={20} />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`h-10 rounded-lg flex items-center justify-center gap-1.5 px-2 ${method === 'mpesa' ? 'w-[76px] bg-green-50' : 'bg-white border border-slate-200'}`}>
+      {logos.map((logo) => (
+        <img
+          key={logo.name}
+          src={logo.src}
+          alt={logo.name}
+          className={method === 'mpesa' ? 'h-7 w-[66px] object-contain' : 'h-5 w-9 object-contain'}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function Checkout() {
   const { items, subtotal, clearCart, coupon } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [address, setAddress] = useState({ name: '', phone: '', area: '', town: '', county: '', instructions: '' });
+  const [address, setAddress] = useState({ name: '', phone: '', area: '', town: '', country: 'Kenya', instructions: '' });
   const [delivery, setDelivery] = useState('standard');
   const [payment, setPayment] = useState('mpesa');
+  const [mpesaPhone, setMpesaPhone] = useState('');
+  const [cardDetails, setCardDetails] = useState({ number: '', name: '', expiry: '', cvc: '' });
   const [placing, setPlacing] = useState(false);
   const [serviceProductId, setServiceProductId] = useState(null);
   const [channelsError, setChannelsError] = useState(null);
@@ -42,12 +79,22 @@ export default function Checkout() {
       .catch(() => setChannelsError('Could not load shipping options.'));
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+    const fullName = user.full_name || [user.first_name, user.last_name].filter(Boolean).join(' ');
+    const phone = user.phone || user.phone_number || '';
+    setAddress((current) => ({ ...current, name: current.name || fullName, phone: current.phone || phone }));
+    setMpesaPhone((current) => current || phone);
+  }, [user]);
+
   const deliveryMethod = DELIVERY_METHODS.find(d => d.id === delivery);
   const discount = coupon?.discount ?? 0;
   const total = subtotal + (deliveryMethod?.fee || 0) - discount;
 
   const canContinue = () => {
-    if (step === 1) return address.name && address.phone && address.area && address.town;
+    if (step === 1) return address.name && address.phone && address.area && address.town && address.country;
+    if (step === 3 && payment === 'mpesa') return mpesaPhone.trim().length >= 9;
+    if (step === 3 && payment === 'card') return cardDetails.number.replace(/\s/g, '').length >= 12 && cardDetails.name && cardDetails.expiry && cardDetails.cvc;
     return true;
   };
 
@@ -75,6 +122,7 @@ export default function Checkout() {
         method: payment,
         amount: total,
         currency: order.currency || 'KSH',
+        phone_number: payment === 'mpesa' ? mpesaPhone : undefined,
       });
       await clearCart();
       navigate('/order-success', {
@@ -100,7 +148,7 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-brown-light">
       <PageTransition>
-      <div className="max-w-3xl mx-auto px-4 pt-24 pb-32 md:pb-16">
+      <div className="max-w-3xl mx-auto px-4 sm:px-5 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-6">Checkout</h1>
 
         {channelsError && (
@@ -131,7 +179,7 @@ export default function Checkout() {
                   <div className="space-y-1.5"><Label>Phone Number</Label><Input value={address.phone} onChange={e => setAddress(a => ({ ...a, phone: e.target.value }))} placeholder="0712 345 678" /></div>
                   <div className="space-y-1.5"><Label>Area / Estate</Label><Input value={address.area} onChange={e => setAddress(a => ({ ...a, area: e.target.value }))} placeholder="Kilimani" /></div>
                   <div className="space-y-1.5"><Label>Town</Label><Input value={address.town} onChange={e => setAddress(a => ({ ...a, town: e.target.value }))} placeholder="Nairobi" /></div>
-                  <div className="space-y-1.5"><Label>County</Label><Input value={address.county} onChange={e => setAddress(a => ({ ...a, county: e.target.value }))} placeholder="Nairobi County" /></div>
+                  <div className="space-y-1.5"><Label>Country</Label><Input value={address.country} onChange={e => setAddress(a => ({ ...a, country: e.target.value }))} placeholder="Kenya" /></div>
                   <div className="space-y-1.5"><Label>Delivery Instructions (optional)</Label><Input value={address.instructions} onChange={e => setAddress(a => ({ ...a, instructions: e.target.value }))} placeholder="Gate code, landmark..." /></div>
                 </div>
               </motion.div>
@@ -140,30 +188,56 @@ export default function Checkout() {
             {step === 2 && (
               <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-3">
                 <h2 className="font-display font-bold text-lg text-[#0A0F1E] mb-2">Delivery Method</h2>
-                {DELIVERY_METHODS.map(d => (
+                {DELIVERY_METHODS.map(d => {
+                  const DeliveryIcon = d.id === 'boda_express' ? Bike : d.id === 'pickup' ? Store : Truck;
+                  return (
                   <button key={d.id} onClick={() => setDelivery(d.id)} className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-colors ${delivery === d.id ? 'border-brand bg-brown-light' : 'border-slate-200'}`}>
-                    <div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-brand/10 text-brand flex items-center justify-center"><DeliveryIcon size={20} /></div>
+                      <div>
                       <p className="font-semibold text-sm text-[#0A0F1E]">{d.name}</p>
                       <p className="text-xs text-slate-500">{d.eta}</p>
+                      </div>
                     </div>
                     <span className="font-bold text-sm text-brand">{d.fee === 0 ? 'Free' : formatPrice(d.fee)}</span>
                   </button>
-                ))}
+                  );
+                })}
               </motion.div>
             )}
 
             {step === 3 && (
               <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-3">
                 <h2 className="font-display font-bold text-lg text-[#0A0F1E] mb-2">Payment Method</h2>
-                {PAYMENT_METHODS.map(p => (
+                {PAYMENT_METHODS.map(p => {
+                  return (
                   <button key={p.id} onClick={() => setPayment(p.id)} className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-colors ${payment === p.id ? 'border-brand bg-brown-light' : 'border-slate-200'}`}>
-                    <div>
+                    <div className="flex items-center gap-3">
+                      <PaymentMethodLogo method={p.id} />
+                      <div>
                       <p className="font-semibold text-sm text-[#0A0F1E]">{p.name}</p>
                       <p className="text-xs text-slate-500">{p.description}</p>
+                      </div>
                     </div>
                     {payment === p.id && <Check size={18} className="text-brand" />}
                   </button>
-                ))}
+                  );
+                })}
+                {payment === 'mpesa' && (
+                  <div className="rounded-xl bg-green-50 border border-green-100 p-4 space-y-2">
+                    <Label>M-Pesa phone number</Label>
+                    <Input type="tel" value={mpesaPhone} onChange={e => setMpesaPhone(e.target.value)} placeholder="0712 345 678" />
+                    <p className="text-xs text-green-800">We will send a secure M-Pesa prompt to this number when you place the order.</p>
+                  </div>
+                )}
+                {payment === 'card' && (
+                  <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 space-y-3">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-700"><LockKeyhole size={15} /> Secure card details</div>
+                    <Input inputMode="numeric" value={cardDetails.number} onChange={e => setCardDetails(v => ({ ...v, number: e.target.value }))} placeholder="Card number" />
+                    <Input value={cardDetails.name} onChange={e => setCardDetails(v => ({ ...v, name: e.target.value }))} placeholder="Name on card" />
+                    <div className="grid grid-cols-2 gap-3"><Input value={cardDetails.expiry} onChange={e => setCardDetails(v => ({ ...v, expiry: e.target.value }))} placeholder="MM / YY" /><Input inputMode="numeric" value={cardDetails.cvc} onChange={e => setCardDetails(v => ({ ...v, cvc: e.target.value }))} placeholder="CVC" /></div>
+                  </div>
+                )}
               </motion.div>
             )}
 

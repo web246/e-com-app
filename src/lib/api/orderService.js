@@ -5,12 +5,13 @@ export async function createOrder(payload) {
   return apiPost('/orders', payload);
 }
 
-export async function payOrder({ order_id, method, amount, currency }) {
+export async function payOrder({ order_id, method, amount, currency, phone_number }) {
   return apiPost('/checkout/pay', {
     order_id,
     method,
     amount,
     currency: currency || 'KSH',
+    ...(phone_number ? { phone_number } : {}),
   });
 }
 
@@ -21,6 +22,43 @@ export async function fetchCustomerOrders({ page = 1, page_size = 20 } = {}) {
     items: data.items || data.orders || (Array.isArray(data) ? data : []),
     pagination: data.pagination || {},
   };
+}
+
+const COMPLETED_ORDER_STATUSES = [
+  'delivered',
+  'complete',
+  'completed',
+  'closed',
+  'fulfilled',
+  'success',
+  'successful',
+  'done',
+  'received',
+];
+
+// The orders API has returned the delivery state under different fields (and,
+// in some responses, as a nested status object). Keep that API variation out
+// of the views so completed purchases are not accidentally filtered away.
+export function isCompletedOrder(order) {
+  if (!order || typeof order !== 'object') return false;
+  if (order.is_completed === true || order.completed_at || order.delivered_at) return true;
+
+  const statuses = [];
+  const collectStatuses = (value, key = '', depth = 0) => {
+    if (depth > 2 || value == null) return;
+
+    if (typeof value === 'string' && /(status|state|completion|delivery|fulfillment)/i.test(key)) {
+      statuses.push(value.toLowerCase());
+      return;
+    }
+
+    if (typeof value === 'object') {
+      Object.entries(value).forEach(([childKey, childValue]) => collectStatuses(childValue, childKey, depth + 1));
+    }
+  };
+
+  collectStatuses(order);
+  return statuses.some((status) => COMPLETED_ORDER_STATUSES.some((alias) => status.includes(alias)));
 }
 
 export async function validateCoupon(code, subtotal) {

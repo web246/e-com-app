@@ -62,7 +62,7 @@ export default function Cart() {
     return (
       <div className="min-h-screen bg-brown-light">
         <PageTransition>
-        <div className="max-w-xl mx-auto px-4 pt-32 pb-32 text-center">
+        <div className="max-w-xl mx-auto px-4 sm:px-5 pt-32 pb-32 text-center">
           <div className="w-24 h-24 rounded-full bg-brown-light flex items-center justify-center mx-auto mb-6">
             <ShoppingBag size={40} className="text-brand" />
           </div>
@@ -79,7 +79,7 @@ export default function Cart() {
   return (
     <div className="min-h-screen bg-brown-light">
       <PageTransition>
-      <div className="max-w-5xl mx-auto px-4 pt-24 pb-32 md:pb-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-5 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-6">Shopping Cart ({items.length})</h1>
 
         <div className="grid lg:grid-cols-3 gap-6">

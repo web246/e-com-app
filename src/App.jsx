@@ -20,6 +20,8 @@ import Cart from '@/pages/Cart';
 import Checkout from '@/pages/Checkout';
 import OrderSuccess from '@/pages/OrderSuccess';
 import Orders from '@/pages/Orders';
+import OrdersPending from '@/pages/OrdersPending';
+import OrdersCompleted from '@/pages/OrdersCompleted';
 import Wishlist from '@/pages/Wishlist';
 import Search from '@/pages/Search';
 import Categories from '@/pages/Categories';
@@ -70,7 +72,8 @@ const AuthenticatedApp = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-success" element={<OrderSuccess />} />
-          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders" element={<OrdersPending />} />
+          <Route path="/orders/completed" element={<OrdersCompleted />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/search" element={<Search />} />
           <Route path="/categories" element={<Categories />} />

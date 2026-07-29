@@ -33,7 +33,14 @@ export default function Store() {
         }
 
         setStore(storeData);
-        setProducts(productData.items || []);
+        const selectedStoreName = String(storeData.name || '').trim().toLowerCase();
+        const scopedProducts = (productData.items || []).filter((product) => {
+          const productStoreName = String(product.store_name || '').trim().toLowerCase();
+          return product.vendor_slug === storeData.slug
+            || String(product.vendor_id || '') === String(storeData.id || '')
+            || (selectedStoreName && productStoreName === selectedStoreName);
+        });
+        setProducts(scopedProducts);
       } catch (err) {
         setError(err.message || 'Failed to load store.');
       } finally {
@@ -54,7 +61,7 @@ export default function Store() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-brown-light flex flex-col items-center justify-center gap-4 px-4 text-center">
+      <div className="min-h-screen bg-brown-light flex flex-col items-center justify-center gap-4 px-4 sm:px-5 text-center">
         <p className="text-slate-500">{error}</p>
         <Link to="/" className="btn-primary px-5 py-2">Back to Home</Link>
       </div>
@@ -62,7 +69,7 @@ export default function Store() {
   }
 
   return (
-    <div className="min-h-screen bg-brown-light">
+    <div className="min-h-screen bg-white">
       <PageTransition>
         <div className="relative overflow-hidden bg-white pb-10">
           <div className="h-64 bg-slate-900/95">
@@ -73,7 +80,7 @@ export default function Store() {
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/25 to-transparent" />
           </div>
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="-mt-16 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div className="flex items-center gap-4 rounded-[32px] bg-white p-4 shadow-xl ring-1 ring-slate-200">
                 <div className="w-24 h-24 rounded-3xl overflow-hidden bg-slate-100 border border-slate-200">
@@ -118,17 +125,16 @@ export default function Store() {
                 <p className="text-sm text-slate-500">Category</p>
                 <p className="mt-3 text-sm font-semibold text-slate-900">{store.category || 'General'}</p>
               </div>
-              <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-                <p className="text-sm text-slate-500">Followers</p>
-                <p className="mt-3 text-xl font-semibold text-slate-900">{store.followers_count || '1.2k'}</p>
+              <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:col-span-2 lg:col-span-1">
+                <p className="text-sm text-slate-500">About this vendor</p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-700 line-clamp-3">{store.description || 'A trusted vendor offering a curated selection of quality products.'}</p>
               </div>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-10 bg-white">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.24em] text-slate-400">Store products</p>
-                  <h2 className="font-display text-2xl font-bold text-[#111827]">Shop directly from this store</h2>
+                  <h2 className="font-display text-2xl font-bold text-[#0A0F1E]">Store Products</h2>
                 </div>
                 <div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600">{products.length} items</div>
               </div>

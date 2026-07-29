@@ -18,30 +18,30 @@ export default function CategoryStrip() {
   if (categories.length === 0) return null;
 
   return (
-    <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1">
+    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
       {categories.map((cat) => {
         const Icon = iconMap[cat.icon] || Grid3X3;
         return (
           <Link
             key={cat.slug || cat.id}
             to={`/categories/${cat.slug}`}
-            className="flex flex-col items-center gap-2 flex-shrink-0 w-16 sm:w-20 category-pill"
+            className="flex flex-col items-center gap-1.5 flex-shrink-0 w-14 sm:w-16 category-pill"
           >
             <div
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center transition-transform hover:scale-105"
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-transform hover:scale-105"
               style={{ background: `${cat.color}15` }}
             >
-              <Icon size={24} style={{ color: cat.color }} />
+              <Icon size={18} style={{ color: cat.color }} />
             </div>
-            <span className="text-xs font-medium text-[#5a463b] text-center leading-tight">{cat.name}</span>
+            <span className="text-[10px] font-medium text-[#5a463b] text-center leading-tight line-clamp-2">{cat.name}</span>
           </Link>
         );
       })}
-      <Link to="/categories" className="flex flex-col items-center gap-2 flex-shrink-0 w-16 sm:w-20 category-pill">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center bg-brown-light border border-[#D9D2CB]/70">
-          <Grid3X3 size={24} className="text-[#4A2A1A]" />
+      <Link to="/categories" className="flex flex-col items-center gap-1.5 flex-shrink-0 w-14 sm:w-16 category-pill">
+        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center bg-brown-light border border-[#D9D2CB]/70">
+          <Grid3X3 size={18} className="text-[#4A2A1A]" />
         </div>
-        <span className="text-xs font-medium text-[#4A2A1A] text-center leading-tight">More</span>
+        <span className="text-[10px] font-medium text-[#4A2A1A] text-center leading-tight">More</span>
       </Link>
     </div>
   );

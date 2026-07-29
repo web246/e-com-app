@@ -12,7 +12,7 @@ export default function OrderSuccess() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-brown-light flex items-center justify-center px-4">
+      <div className="min-h-screen bg-brown-light flex items-center justify-center px-4 sm:px-5">
         <div className="text-center">
           <p className="text-slate-500 mb-4">No recent order found.</p>
           <Link to="/" className="btn-primary inline-block px-6 py-3">Go Home</Link>
@@ -24,7 +24,7 @@ export default function OrderSuccess() {
   return (
     <div className="min-h-screen bg-brown-light">
       <PageTransition>
-      <div className="max-w-md mx-auto px-4 pt-32 pb-32 text-center">
+      <div className="max-w-md mx-auto px-4 sm:px-5 pt-32 pb-32 text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
