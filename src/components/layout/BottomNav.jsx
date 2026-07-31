@@ -17,7 +17,7 @@ export default function BottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pb-safe md:hidden">
-      <div className="rounded-2xl shadow-lg border border-[#7D2B2B]/25 px-2 py-2 max-w-md mx-auto flex items-center justify-between relative bg-[#7D2B2B] text-[#F6EBDD]">
+      <div className="rounded-full shadow-[0_10px_25px_rgba(125,43,43,0.24)] border border-[#7D2B2B]/20 px-2 py-2 max-w-md mx-auto flex items-center justify-between relative bg-[#7D2B2B] text-[#F7F3EF]">
         {TABS.map(({ to, icon: Icon, label }) => {
           const active = to === '/' ? pathname === '/' : pathname.startsWith(to);
           return (
@@ -25,17 +25,17 @@ export default function BottomNav() {
               {active && (
                 <motion.div
                   layoutId="bottomnav-active"
-                  className="absolute -top-2 w-8 h-0.5 rounded-full bg-[#F6EBDD]"
+                  className="absolute -top-2 w-8 h-0.5 rounded-full bg-[#F7F3EF]"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
               <div className="relative">
-                <Icon size={20} strokeWidth={active ? 2.5 : 2} className={active ? 'text-[#F6EBDD]' : 'text-[#C8A37B]'} />
+                <Icon size={20} strokeWidth={active ? 2.5 : 2} className={active ? 'text-white' : 'text-[#F2D9C8]'} />
                 {to === '/cart' && itemCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2 w-4 h-4 rounded-full bg-[#F6EBDD] text-[#4A2A1A] text-[9px] flex items-center justify-center font-bold">{itemCount}</span>
+                  <span className="absolute -top-1.5 -right-2 w-4 h-4 rounded-full bg-white text-[#7D2B2B] text-[9px] flex items-center justify-center font-bold">{itemCount}</span>
                 )}
               </div>
-              <span className={`text-[10px] font-medium ${active ? 'text-[#F6EBDD]' : 'text-[#C8A37B]'}`}>{label}</span>
+              <span className={`text-[10px] font-medium ${active ? 'text-white' : 'text-[#F2D9C8]'}`}>{label}</span>
             </Link>
           );
         })}

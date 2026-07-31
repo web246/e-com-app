@@ -19,9 +19,12 @@ export default function Search() {
   const { slug } = useParams();
   const params = new URLSearchParams(search);
   const query = params.get('q') || '';
+  const filter = params.get('filter') || '';
   const [sort, setSort] = useState('relevance');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedCategorySlug, setSelectedCategorySlug] = useState('');
+  const [selectedCategoryName, setSelectedCategoryName] = useState('');
   const [freeShippingOnly, setFreeShippingOnly] = useState(false);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -38,13 +41,20 @@ export default function Search() {
     if (slug === 'general') {
       setSelectedCategory('general');
       setSelectedCategoryId(null);
+      setSelectedCategorySlug('general');
+      setSelectedCategoryName('General');
     } else if (slug && categories.length) {
       const cat = categories.find((c) => c.slug === slug);
+      const categorySlug = cat?.slug || slug;
       setSelectedCategory(slug);
       setSelectedCategoryId(cat && !cat.isFallback ? (cat.id ?? null) : null);
+      setSelectedCategorySlug(categorySlug);
+      setSelectedCategoryName(cat?.name || categorySlug);
     } else if (!slug) {
       setSelectedCategory('');
       setSelectedCategoryId(null);
+      setSelectedCategorySlug('');
+      setSelectedCategoryName('');
     }
   }, [slug, categories]);
 
@@ -58,13 +68,37 @@ export default function Search() {
         page_size: 50,
         search: query || undefined,
         category_id: selectedCategoryId || undefined,
+        category_slug: selectedCategorySlug || undefined,
+        category_name: selectedCategoryName || undefined,
       });
       let results = items;
-      if (selectedCategory && !selectedCategoryId) {
-        const needle = selectedCategory.toLowerCase();
+      if (filter === 'discount') {
+        results = results.filter((p) => Number(p.discount_percent || 0) > 0);
+      } else if (filter === 'free_shipping') {
+        results = results.filter((p) => p.free_shipping);
+      } else if (filter === 'clearance') {
+        results = results.filter((p) => Number(p.discount_percent || 0) >= 20);
+      } else if (filter === 'gift') {
+        const needle = 'gift';
         results = results.filter((p) => {
-          const cat = String(p.category || '').toLowerCase();
-          return cat.includes(needle) || needle.includes(cat.replace(/\s+/g, '-'));
+          const text = `${p.name || ''} ${p.description || ''}`.toLowerCase();
+          return text.includes(needle);
+        });
+      }
+      if (selectedCategory) {
+        const targets = [selectedCategorySlug, selectedCategoryName, selectedCategory]
+          .filter(Boolean)
+          .map((value) => String(value).trim().toLowerCase())
+          .flatMap((value) => [value, value.replace(/\s+/g, '-')]);
+        results = results.filter((p) => {
+          const categoryCandidates = [
+            p.category_slug,
+            p.category_name,
+            p.category,
+            p.category?.slug,
+            p.category?.name,
+          ].filter(Boolean).map((value) => String(value).trim().toLowerCase());
+          return categoryCandidates.some((candidate) => targets.some((target) => candidate.includes(target) || target.includes(candidate)));
         });
       }
       if (freeShippingOnly) results = results.filter((p) => p.free_shipping);
@@ -81,15 +115,19 @@ export default function Search() {
 
   useEffect(() => {
     loadProducts();
-  }, [query, sort, selectedCategory, selectedCategoryId, freeShippingOnly]);
+  }, [query, filter, sort, selectedCategory, selectedCategoryId, selectedCategorySlug, selectedCategoryName, freeShippingOnly]);
 
   const selectCategory = (cat) => {
     if (selectedCategory === cat.slug) {
       setSelectedCategory('');
       setSelectedCategoryId(null);
+      setSelectedCategorySlug('');
+      setSelectedCategoryName('');
     } else {
       setSelectedCategory(cat.slug);
       setSelectedCategoryId(cat.isFallback ? null : (cat.id ?? null));
+      setSelectedCategorySlug(cat.slug);
+      setSelectedCategoryName(cat.name || cat.slug);
     }
   };
 
@@ -101,7 +139,15 @@ export default function Search() {
             <div className="mb-4">
               <div>
                 <h1 className="font-display font-bold text-lg text-[#0A0F1E] leading-tight">
-                  {query ? <>Results for <span className="text-brand">"{query}"</span></> : 'All Products'}
+                  {query ? <>Results for <span className="text-brand">"{query}"</span></> : filter ? (() => {
+                    switch (filter) {
+                      case 'discount': return 'Flash Deals';
+                      case 'gift': return 'New User Gift';
+                      case 'free_shipping': return 'Free Shipping';
+                      case 'clearance': return 'Clearance';
+                      default: return 'All Products';
+                    }
+                  })() : 'All Products'}
                 </h1>
                 <p className="text-slate-500 text-[11px] mt-0.5">{loading ? 'Searching...' : `${products.length} products found`}</p>
               </div>
@@ -139,7 +185,7 @@ export default function Search() {
                     </label>
                   </div>
                   {(selectedCategory || freeShippingOnly) && (
-                    <button onClick={() => { setSelectedCategory(''); setSelectedCategoryId(null); setFreeShippingOnly(false); }} className="flex items-center gap-1 text-[11px] text-red-500 hover:text-red-700 font-medium">
+                    <button onClick={() => { setSelectedCategory(''); setSelectedCategoryId(null); setSelectedCategorySlug(''); setSelectedCategoryName(''); setFreeShippingOnly(false); }} className="flex items-center gap-1 text-[11px] text-red-500 hover:text-red-700 font-medium">
                       <X size={12} /> Clear
                     </button>
                   )}

@@ -38,7 +38,7 @@ export default function CategoryStrip() {
         );
       })}
       <Link to="/categories" className="flex flex-col items-center gap-1.5 flex-shrink-0 w-14 sm:w-16 category-pill">
-        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center bg-brown-light border border-[#D9D2CB]/70">
+        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center bg-white border border-slate-200">
           <Grid3X3 size={18} className="text-[#4A2A1A]" />
         </div>
         <span className="text-[10px] font-medium text-[#4A2A1A] text-center leading-tight">More</span>

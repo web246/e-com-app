@@ -3,8 +3,8 @@ import { cn } from '@/lib/utils';
 
 const variants = {
   default: 'bg-[#7D2B2B] text-white hover:bg-[#A24A3A] shadow-sm',
-  outline: 'border border-[#D9D2CB] bg-[#F7F3EF] text-[#421313] hover:bg-[#f2e9e0]',
-  ghost: 'text-[#421313] hover:bg-[#f2e9e0]',
+  outline: 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50',
+  ghost: 'text-slate-700 hover:bg-slate-100',
   destructive: 'bg-[#E54545] text-white hover:bg-[#c93c3c]',
   accent: 'bg-[#7D2B2B] text-white hover:bg-[#A24A3A]',
 };

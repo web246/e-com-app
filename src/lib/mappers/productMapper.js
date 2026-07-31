@@ -5,6 +5,8 @@ export function mapProduct(p) {
   if (!p) return null;
   const rawCategory = p.category && typeof p.category === 'object' ? p.category : null;
   const categoryValue = p.category_slug || rawCategory?.slug || p.category_name || rawCategory?.name || p.category || 'general';
+  const normalizedCategorySlug = String(categoryValue || 'general').trim().toLowerCase().replace(/\s+/g, '-');
+  const categoryDisplayName = p.category_name || rawCategory?.name || getCategoryName(categoryValue) || 'General';
   const price = p.sale_price > 0 ? p.sale_price : p.price;
   const oldPrice = p.sale_price > 0 ? p.price : null;
   const discountPercent =
@@ -26,7 +28,9 @@ export function mapProduct(p) {
     store_name: p.vendor_name || p.vendor?.business_name || p.store_name || '',
     vendor_slug: p.vendor_slug || p.vendor?.slug || p.store_slug || '',
     vendor_id: p.vendor_id || p.vendor?.id || p.store_id || null,
-    category: getCategoryName(categoryValue),
+    category: categoryDisplayName,
+    category_slug: normalizedCategorySlug,
+    category_name: categoryDisplayName,
     category_id: p.category_id || rawCategory?.id || null,
     free_shipping: !!p.free_shipping,
     shipping_cost: Number(p.shipping_cost ?? p.shipping_fee ?? p.delivery_fee ?? 0),

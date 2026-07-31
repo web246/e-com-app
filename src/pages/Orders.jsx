@@ -28,7 +28,7 @@ export default function Orders() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-brown-light flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <p className="text-slate-500">Loading orders...</p>
       </div>
     );
@@ -36,10 +36,10 @@ export default function Orders() {
 
   if (orders.length === 0) {
     return (
-      <div className="min-h-screen bg-brown-light">
+      <div className="min-h-screen bg-white">
         <PageTransition>
         <div className="max-w-xl mx-auto px-4 sm:px-5 pt-32 pb-32 text-center">
-          <div className="w-24 h-24 rounded-full bg-brown-light flex items-center justify-center mx-auto mb-6">
+          <div className="w-24 h-24 rounded-full bg-white border border-slate-200 flex items-center justify-center mx-auto mb-6">
             <Package size={40} className="text-brand" />
           </div>
           <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-2">No orders yet</h1>

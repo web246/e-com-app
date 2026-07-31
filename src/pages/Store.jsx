@@ -53,7 +53,7 @@ export default function Store() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-brown-light flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <p className="text-slate-500">Loading store...</p>
       </div>
     );
@@ -61,7 +61,7 @@ export default function Store() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-brown-light flex flex-col items-center justify-center gap-4 px-4 sm:px-5 text-center">
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-4 px-4 sm:px-5 text-center">
         <p className="text-slate-500">{error}</p>
         <Link to="/" className="btn-primary px-5 py-2">Back to Home</Link>
       </div>

@@ -11,8 +11,8 @@ function buildQuery(params) {
   return s ? `?${s}` : '';
 }
 
-export async function fetchProducts({ page = 1, page_size = 20, search, category_id, vendor_slug } = {}) {
-  const data = await apiGetPublic(`/public/products${buildQuery({ page, page_size, search, category_id, vendor_slug })}`);
+export async function fetchProducts({ page = 1, page_size = 20, search, category_id, category_slug, category_name, vendor_slug } = {}) {
+  const data = await apiGetPublic(`/public/products${buildQuery({ page, page_size, search, category_id, category_slug, category_name, vendor_slug })}`);
   return {
     items: (data.items || []).map(mapProduct),
     pagination: data.pagination || {},

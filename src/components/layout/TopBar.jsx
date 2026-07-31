@@ -355,7 +355,7 @@ export default function TopBar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 pt-safe">
-      <div className="max-w-7xl mx-auto rounded-2xl shadow-lg px-4 py-2.5 flex items-center gap-3 bg-white text-gray-800 border border-[#E8D7C1]">
+      <div className="max-w-7xl mx-auto rounded-2xl shadow-lg px-4 py-2.5 flex items-center gap-3 bg-white text-gray-800 border border-slate-200">
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
           <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center">
             <img src={logo} alt="Dennis Mendez" className="w-full h-full object-cover" />
@@ -374,27 +374,27 @@ export default function TopBar() {
         </form>
 
         <div className="flex items-center gap-1 ml-auto relative">
-          <button onClick={() => setSearchOpen((v) => !v)} className="md:hidden p-2 rounded-xl hover:bg-[#e8dbcf]">
-            <Search size={19} className="text-[#4A2A1A]" />
+          <button onClick={() => setSearchOpen((v) => !v)} className="md:hidden p-2 rounded-xl hover:bg-slate-100">
+            <Search size={19} className="text-slate-600" />
           </button>
 
           <button
             type="button"
             onClick={() => setCountryOpen((v) => !v)}
-            className="rounded-xl border border-[#7D2B2B]/30 bg-[#F7ECE7] px-3 py-2 text-sm font-medium text-[#7D2B2B] hover:bg-[#f0ddd4]"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
             aria-label={`Country: ${selectedCountry.name}`}
           >
             <span className="text-base">{countryCodeToFlag(selectedCountry.code)}</span>
           </button>
 
           {countryOpen && (
-            <div className="absolute right-0 top-full mt-2 w-48 max-h-72 overflow-y-auto rounded-2xl border border-[#8B5E3B]/25 bg-white shadow-lg">
+            <div className="absolute right-0 top-full mt-2 w-48 max-h-72 overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-lg">
               {COUNTRIES.map((country) => (
                 <button
                   key={country.code}
                   type="button"
                   onClick={() => changeCountry(country)}
-                  className="w-full px-4 py-3 text-left text-sm text-[#3F2415] hover:bg-[#F6EBDD]"
+                  className="w-full px-4 py-3 text-left text-sm text-slate-700 hover:bg-slate-50"
                 >
                   <span className="mr-2">{countryCodeToFlag(country.code)}</span>
                   {country.name}
@@ -406,8 +406,8 @@ export default function TopBar() {
       </div>
 
       {searchOpen && (
-        <form onSubmit={doSearch} className="md:hidden max-w-7xl mx-auto mt-2 rounded-2xl shadow-lg px-4 py-2.5 flex items-center relative bg-[#F7ECE7] border border-[#7D2B2B]/20">
-          <Search size={16} className="absolute left-7 text-[#8B5E3B]" />
+        <form onSubmit={doSearch} className="md:hidden max-w-7xl mx-auto mt-2 rounded-2xl shadow-lg px-4 py-2.5 flex items-center relative bg-white border border-slate-200">
+          <Search size={16} className="absolute left-7 text-slate-400" />
           <input
             autoFocus
             value={query}

@@ -22,7 +22,7 @@ export default function Categories() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-brown-light">
+    <div className="min-h-screen bg-white">
       <PageTransition>
       <div className="max-w-5xl mx-auto px-5 sm:px-6 pt-24 pb-32 md:pb-16">
         <h1 className="font-display font-bold text-2xl text-[#0A0F1E] mb-1">All Categories</h1>

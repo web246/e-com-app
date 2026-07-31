@@ -18,7 +18,7 @@ export default function FeaturedStores() {
 
   return (
     <section>
-      <SectionHeader title="Featured Stores" subtitle="Shop from trusted, verified sellers" badge="⭐ Handpicked" />
+      <SectionHeader title="Featured Stores" subtitle="Shop from trusted, verified sellers" badge="⭐ Handpicked" viewAllTo="/stores" />
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {stores.map((store, i) => (
           <motion.div
@@ -32,7 +32,7 @@ export default function FeaturedStores() {
             {store.logo_url ? (
               <img src={store.logo_url} alt={store.name} className="w-14 h-14 rounded-2xl object-cover" />
             ) : (
-              <div className="w-14 h-14 rounded-2xl bg-brown-light border border-[#D9D2CB]/70 flex items-center justify-center text-brand font-bold">
+              <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-brand font-bold">
                 {store.name?.charAt(0)}
               </div>
             )}
@@ -46,7 +46,7 @@ export default function FeaturedStores() {
             </div>
             <Link
               to={`/store/${store.slug}`}
-              className="text-xs font-semibold text-[#4A2A1A] border border-[#D9B48A]/60 rounded-full px-3 py-1 mt-1 hover:bg-brown-light transition-all"
+              className="text-xs font-semibold text-slate-700 border border-slate-200 rounded-full px-3 py-1 mt-1 hover:bg-slate-50 transition-all"
             >
               View Store
             </Link>

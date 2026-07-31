@@ -43,7 +43,7 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-brown-light flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <p className="text-slate-500">Loading product...</p>
       </div>
     );
@@ -51,7 +51,7 @@ export default function ProductDetail() {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-brown-light flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-4">
         <p className="text-slate-500">{error || 'Product not found'}</p>
         <button onClick={() => navigate('/')} className="btn-primary px-6 py-2">Back to home</button>
       </div>
@@ -80,7 +80,7 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-brown-light">
+    <div className="min-h-screen bg-white">
       <PageTransition>
       <div className="max-w-6xl mx-auto px-5 sm:px-6 pt-24 pb-32 md:pb-16">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-slate-500 mb-4 hover:text-slate-700">
@@ -93,7 +93,7 @@ export default function ProductDetail() {
               {images[activeImg] ? (
                 <img src={images[activeImg]} alt={product.name} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-brown-light" />
+                <div className="w-full h-full bg-white" />
               )}
             </div>
             {images.length > 1 && (

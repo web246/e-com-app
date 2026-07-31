@@ -38,7 +38,7 @@ export default function ProductCard({ product, compact = false }) {
   return (
     <motion.div whileHover={{ y: -2 }} className={`${compact ? '' : 'linet-card hydro-shadow-hover'} overflow-hidden group ${cardClass}`}>
       <Link to={`/product/${product.id}`} className="block">
-        <div className={`relative ${imageClass} bg-brown-light overflow-hidden`}>
+        <div className={`relative ${imageClass} bg-white overflow-hidden`}>
           {product.thumbnail ? (
             <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
           ) : (
