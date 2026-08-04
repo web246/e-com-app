@@ -17,6 +17,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState({ code: 'US', name: 'United States' });
 
   const loadProducts = async () => {
     setLoading(true);
@@ -34,6 +35,33 @@ export default function Home() {
 
   useEffect(() => {
     loadProducts();
+  }, []);
+
+  useEffect(() => {
+    const syncCountry = () => {
+      if (typeof window === 'undefined') return;
+
+      const stored = window.localStorage.getItem('selectedCountry');
+      if (!stored) {
+        setSelectedCountry({ code: 'US', name: 'United States' });
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(stored);
+        setSelectedCountry({
+          code: parsed?.code || 'US',
+          name: parsed?.name || 'United States',
+        });
+      } catch {
+        setSelectedCountry({ code: 'US', name: 'United States' });
+      }
+    };
+
+    syncCountry();
+    window.addEventListener('countryChanged', syncCountry);
+
+    return () => window.removeEventListener('countryChanged', syncCountry);
   }, []);
 
   const trending = products;
@@ -90,7 +118,12 @@ export default function Home() {
         <FeaturedStores />
 
         <section>
-          <SectionHeader title="Best Sellers" subtitle="Trusted favourites across Kenya" viewAllTo="/search?filter=best_seller" badge="🏆 Top Rated" />
+          <SectionHeader
+            title="Best Sellers"
+            subtitle={`Trusted favourites across ${selectedCountry.name || 'Kenya'}`}
+            viewAllTo="/search?filter=best_seller"
+            badge="🏆 Top Rated"
+          />
           <ProductGrid products={bestSellers.slice(0, 8)} loading={loading} cols={4} />
         </section>
 

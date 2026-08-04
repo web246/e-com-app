@@ -264,9 +264,29 @@ const getCountryByCode = (code) => {
   return COUNTRIES.find((item) => item.code === normalized) || null;
 };
 
+const readStoredCountry = () => {
+  if (typeof window === 'undefined') return null;
+
+  const saved = window.localStorage.getItem('selectedCountry');
+  if (!saved) return null;
+
+  try {
+    const parsed = JSON.parse(saved);
+    const match = getCountryByCode(parsed?.code || 'US');
+    return match || null;
+  } catch {
+    return null;
+  }
+};
+
 const saveCountry = (country) => {
   const next = { code: country.code, name: country.name };
-  localStorage.setItem('selectedCountry', JSON.stringify(next));
+
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('selectedCountry', JSON.stringify(next));
+    window.dispatchEvent(new CustomEvent('countryChanged', { detail: next }));
+  }
+
   return next;
 };
 
@@ -292,22 +312,36 @@ export default function TopBar() {
       if (match) applyCountry(match);
     };
 
-    const saved = localStorage.getItem('selectedCountry');
-    if (saved) {
+    const tryIpLookup = async () => {
       try {
-        const stored = JSON.parse(saved);
-        const match = getCountryByCode(stored.code || 'US');
+        const response = await fetch('https://ipapi.co/json/');
+        if (!response.ok) throw new Error('Unable to resolve IP location');
+
+        const data = await response.json();
+        const countryCode = data.country_code?.toUpperCase();
+        const match = getCountryByCode(countryCode);
         if (match) {
-          setSelectedCountry(match);
+          applyCountry(match);
+        } else {
+          fallbackToLocale();
         }
       } catch {
         fallbackToLocale();
       }
-    } else {
-      fallbackToLocale();
+    };
+
+    const storedCountry = readStoredCountry();
+    if (storedCountry) {
+      setSelectedCountry(storedCountry);
+      return;
     }
 
-    if (!navigator.geolocation) return;
+    fallbackToLocale();
+
+    if (!navigator.geolocation) {
+      tryIpLookup();
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -328,13 +362,15 @@ export default function TopBar() {
           const match = getCountryByCode(countryCode);
           if (match) {
             applyCountry(match);
+          } else {
+            tryIpLookup();
           }
         } catch {
-          fallbackToLocale();
+          tryIpLookup();
         }
       },
       () => {
-        fallbackToLocale();
+        tryIpLookup();
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 600000 }
     );
