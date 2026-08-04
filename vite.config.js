@@ -14,7 +14,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api/v1': {
-        target: 'https://salamexporters.com',
+        target: 'https://salamexporters.com/shinazugawa-api',
         changeOrigin: true,
         secure: true,
         // Production nginx returns 403 when Origin is localhost.
