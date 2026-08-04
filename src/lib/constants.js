@@ -55,15 +55,33 @@ export const BANNERS = [
 ];
 
 export const PAYMENT_METHODS = [
-  { id: 'mpesa', name: 'M-Pesa', description: 'Pay via M-Pesa STK push' },
+  { id: 'mpesa', name: 'M-Pesa', description: 'Recommended — pay via M-Pesa STK push' },
   { id: 'card', name: 'Card', description: 'Visa / Mastercard' },
   { id: 'cash_on_delivery', name: 'Cash on Delivery', description: 'Pay when it arrives' },
 ];
 
 export const DELIVERY_METHODS = [
-  { id: 'boda_express', name: 'Boda Express', fee: 250, eta: 'Within 2 hours' },
-  { id: 'standard', name: 'Standard Delivery', fee: 150, eta: '2-4 business days' },
-  { id: 'pickup', name: 'Store Pickup', fee: 0, eta: 'Ready in 1 day' },
+  {
+    id: 'boda_express',
+    name: 'Boda Express',
+    fee: 250,
+    eta: 'Within 2 hours',
+    image_url: 'https://plus.unsplash.com/premium_photo-1681488134408-d6eb570673af?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  },
+  {
+    id: 'standard',
+    name: 'Standard Delivery',
+    fee: 150,
+    eta: '2-4 business days',
+    image_url: 'https://plus.unsplash.com/premium_photo-1681487855134-d6c0434f91f8?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  },
+  {
+    id: 'pickup',
+    name: 'Store Pickup',
+    fee: 0,
+    eta: 'Ready in 1 day',
+    image_url: 'https://plus.unsplash.com/premium_photo-1677995700941-100976883af7?q=80&w=923&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  },
 ];
 
 export function formatPrice(amount, currency = 'KSH') {

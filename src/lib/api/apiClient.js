@@ -45,7 +45,6 @@ async function doFetch(path, options = {}, meta = {}) {
     ...fetchOptions.headers,
   });
 
-
   if (!effectiveSkipAuth) {
     const token = getAccessToken();
     if (token) headers.Authorization = `Bearer ${token}`;
@@ -64,6 +63,8 @@ async function doFetch(path, options = {}, meta = {}) {
     return doFetch(path, fetchOptions, { skipAuth: effectiveSkipAuth, retried: true });
   }
 
+  const payload = body && typeof body === 'object' && 'data' in body ? body.data : body;
+
   if (!res.ok || body.success === false) {
     throw new ApiError(body.error?.message || `Request failed (${res.status})`, {
       code: body.error?.code,
@@ -72,7 +73,7 @@ async function doFetch(path, options = {}, meta = {}) {
     });
   }
 
-  return body.data;
+  return payload;
 }
 
 export function apiGet(path, options = {}) {

@@ -13,9 +13,11 @@ function buildQuery(params) {
 
 export async function fetchProducts({ page = 1, page_size = 20, search, category_id, category_slug, category_name, vendor_slug } = {}) {
   const data = await apiGetPublic(`/public/products${buildQuery({ page, page_size, search, category_id, category_slug, category_name, vendor_slug })}`);
+  const normalized = data && typeof data === 'object' && 'items' in data ? data : (data && typeof data === 'object' && 'data' in data ? data.data : { items: [], pagination: {} });
+  const items = Array.isArray(normalized?.items) ? normalized.items : [];
   return {
-    items: (data.items || []).map(mapProduct),
-    pagination: data.pagination || {},
+    items: items.map(mapProduct).filter(Boolean),
+    pagination: normalized?.pagination || {},
   };
 }
 
@@ -26,7 +28,8 @@ export async function fetchProduct(id) {
 
 export async function fetchCategories(parent_id) {
   const data = await apiGetPublic(`/public/categories${buildQuery({ parent_id })}`);
-  const list = Array.isArray(data) ? data : data.items || [];
+  const normalized = data && typeof data === 'object' && 'items' in data ? data : (data && typeof data === 'object' && 'data' in data ? data.data : data);
+  const list = Array.isArray(normalized) ? normalized : (normalized && Array.isArray(normalized.items) ? normalized.items : []);
   if (list.length) {
     return list.map((c) => ({ ...mapCategory(c), isFallback: false }));
   }

@@ -125,7 +125,7 @@ export default function Checkout() {
         phone_number: payment === 'mpesa' ? mpesaPhone : undefined,
       });
       await clearCart();
-      navigate('/order-success', {
+      navigate('/payment-processing', {
         state: {
           order: {
             order_number: order.order_number,
@@ -190,16 +190,23 @@ export default function Checkout() {
                 <h2 className="font-display font-bold text-lg text-[#0A0F1E] mb-2">Delivery Method</h2>
                 {DELIVERY_METHODS.map(d => {
                   const DeliveryIcon = d.id === 'boda_express' ? Bike : d.id === 'pickup' ? Store : Truck;
+                  const iconColors = d.id === 'pickup'
+                    ? 'bg-[#FEF3C7] text-[#92400E]'
+                    : 'bg-[#DCFCE7] text-[#166534]';
                   return (
-                  <button key={d.id} onClick={() => setDelivery(d.id)} className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-colors ${delivery === d.id ? 'border-brand bg-brown-light' : 'border-slate-200'}`}>
+                  <button key={d.id} onClick={() => setDelivery(d.id)} className={`w-full flex items-center justify-between gap-4 p-4 rounded-3xl border-2 text-left transition-all ${delivery === d.id ? 'border-[#7D2B2B] bg-yellow-50 shadow-[0_20px_50px_rgba(253,224,71,0.35)]' : 'border-white bg-white'}`}>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-brand/10 text-brand flex items-center justify-center"><DeliveryIcon size={20} /></div>
+                      <div className="w-16 h-16 rounded-[1.5rem] bg-white border border-slate-200 flex items-center justify-center shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${iconColors}`}>
+                          <DeliveryIcon size={24} />
+                        </div>
+                      </div>
                       <div>
-                      <p className="font-semibold text-sm text-[#0A0F1E]">{d.name}</p>
-                      <p className="text-xs text-slate-500">{d.eta}</p>
+                        <p className="font-semibold text-sm text-[#0A0F1E]">{d.name}</p>
+                        <p className="text-xs text-slate-500">{d.eta}</p>
                       </div>
                     </div>
-                    <span className="font-bold text-sm text-brand">{d.fee === 0 ? 'Free' : formatPrice(d.fee)}</span>
+                    <span className="font-bold text-sm text-[#B45309]">{d.fee === 0 ? 'Free' : formatPrice(d.fee)}</span>
                   </button>
                   );
                 })}
