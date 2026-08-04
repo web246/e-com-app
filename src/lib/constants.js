@@ -15,6 +15,14 @@ export const CATEGORY_META = {
   automotive: { icon: 'Car', color: '#64748B', name: 'Automotive' },
   health: { icon: 'Heart', color: '#DA212A', name: 'Health' },
   sports: { icon: 'Dumbbell', color: '#06B6D4', name: 'Sports' },
+  technology: { icon: 'Zap', color: '#F59E0B', name: 'Technology' },
+  clothing: { icon: 'Shirt', color: '#EC4899', name: 'Clothing' },
+  shoes: { icon: 'Footprints', color: '#8B5CF6', name: 'Shoes' },
+  wearables: { icon: 'Watch', color: '#06B6D4', name: 'Wearables' },
+  books: { icon: 'Book', color: '#A15B2A', name: 'Books & Music' },
+  music: { icon: 'Music', color: '#A15B2A', name: 'Books & Music' },
+  general_shopping: { icon: 'ShoppingBag', color: '#64748B', name: 'General Shopping' },
+  marketplace: { icon: 'Store', color: '#6D3F23', name: 'Marketplace' },
   more: { icon: 'Grid3X3', color: '#6D3F23', name: 'More' },
 };
 
@@ -27,6 +35,15 @@ export const DEFAULT_CATEGORIES = [
   { id: 6, slug: 'gaming', name: 'Gaming', description: 'Gaming consoles, controllers, and high-performance gear', image_url: '', parent_id: null },
   { id: 7, slug: 'beauty', name: 'Beauty', description: 'Personal care, fragrance and wellness favorites', image_url: '', parent_id: null },
   { id: 8, slug: 'groceries', name: 'Groceries', description: 'Daily essentials, pantry staples and premium foods', image_url: '', parent_id: null },
+  { id: 9, slug: 'sports', name: 'Sports', description: 'Sports equipment, fitness gear, and athletic wear', image_url: '', parent_id: null },
+  { id: 10, slug: 'food', name: 'Food', description: 'Fresh, gourmet, and specialty food items', image_url: '', parent_id: null },
+  { id: 11, slug: 'technology', name: 'Technology', description: 'Latest technology products and gadgets', image_url: '', parent_id: null },
+  { id: 12, slug: 'clothing', name: 'Clothing', description: 'Premium clothing and apparel for all occasions', image_url: '', parent_id: null },
+  { id: 13, slug: 'shoes', name: 'Shoes', description: 'Designer shoes, sneakers, and footwear', image_url: '', parent_id: null },
+  { id: 14, slug: 'wearables', name: 'Wearables', description: 'Smartwatches, fitness trackers, and tech accessories', image_url: '', parent_id: null },
+  { id: 15, slug: 'books', name: 'Books & Music', description: 'Books, music, audiobooks, and entertainment', image_url: '', parent_id: null },
+  { id: 16, slug: 'general_shopping', name: 'General Shopping', description: 'General merchandise and everyday essentials', image_url: '', parent_id: null },
+  { id: 17, slug: 'marketplace', name: 'Marketplace', description: 'Curated marketplace with diverse sellers and products', image_url: '', parent_id: null },
 ];
 
 export function getCategoryName(slug) {
